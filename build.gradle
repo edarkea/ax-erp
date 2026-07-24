@@ -1,0 +1,38 @@
+plugins {
+    id 'com.axelor.app'
+}
+
+axelor {
+    title = 'Axelor ERP'
+    description = 'Aplicación empresarial desarrollada con Axelor'
+}
+
+allprojects {
+    group = 'ec.com.empresa'
+    version = '1.0.0'
+
+    plugins.withType(JavaPlugin) {
+        java {
+            toolchain {
+                languageVersion = JavaLanguageVersion.of(21)
+            }
+        }
+    }
+
+    afterEvaluate {
+        test {
+            useJUnitPlatform()
+            beforeTest { descriptor ->
+                logger.lifecycle('Running: ' + descriptor)
+            }
+        }
+    }
+}
+
+dependencies {
+
+}
+
+war {
+    archiveFileName = 'axp-erp.war'
+}

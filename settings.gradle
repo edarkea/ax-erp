@@ -1,0 +1,46 @@
+pluginManagement {
+  repositories {
+    mavenCentral()
+    gradlePluginPortal()
+  }
+
+  plugins {
+    id 'com.axelor.app' version '8.2.+'
+  }
+}
+
+dependencyResolutionManagement {
+  repositories {
+    mavenCentral()
+    ivy {
+      name = "Node.js"
+      setUrl("https://nodejs.org/dist/")
+
+      patternLayout {
+        artifact("v[revision]/[artifact](-v[revision]-[classifier]).[ext]")
+      }
+      metadataSources {
+        artifact()
+      }
+      content {
+        includeModule("org.nodejs", "node")
+      }
+    }
+  }
+}
+
+rootProject.name = 'ax-erp'
+
+def modules = []
+file("modules").traverse(type: groovy.io.FileType.DIRECTORIES, maxDepth: 1) { it ->
+  if (new File(it, "build.gradle").exists()) {
+    modules.add(it)
+  }
+}
+
+gradle.ext.appModules = modules
+
+modules.each { dir ->
+  include "modules:$dir.name"
+  project(":modules:$dir.name").projectDir = dir
+}
