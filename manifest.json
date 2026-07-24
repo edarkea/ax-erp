@@ -1,0 +1,23 @@
+{
+  "project": "ODC Axelor Codex Agent",
+  "files": [
+    "AGENTS.md",
+    "CODEX_START_PROMPT.md",
+    "docs/architecture/00-roadmap.md",
+    "docs/architecture/01-reference-data.md",
+    "docs/architecture/02-organization.md",
+    "docs/architecture/03-operations.md",
+    "docs/architecture/04-tax.md",
+    "docs/architecture/05-party.md",
+    "docs/architecture/06-catalog.md",
+    "docs/architecture/07-pricing.md",
+    "docs/architecture/08-document-control.md",
+    "docs/architecture/09-accounting.md",
+    "docs/architecture/10-sales.md",
+    "docs/architecture/11-sales-accounting.md",
+    "docs/architecture/12-migration-hardening.md",
+    "tasks/PHASE_TASK_TEMPLATE.md"
+  ],
+  "module_count": 11,
+  "phase_count": 9
+}
