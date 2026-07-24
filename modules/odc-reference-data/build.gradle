@@ -6,3 +6,7 @@ axelor {
     title = 'ODC Reference Data'
     description = 'ODC reference data module'
 }
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+}

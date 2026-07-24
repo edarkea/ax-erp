@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<domain-models xmlns="http://axelor.com/xml/ns/domain-models"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/domain-models https://axelor.com/xml/ns/domain-models/domain-models_8.0.xsd">
+
+  <module name="odc-reference" package="com.odc.reference.db"/>
+
+  <entity name="Currency" table="odc_currency">
+    <string name="code" title="Code" required="true" max="3"/>
+    <string name="name" title="Name"/>
+    <string name="symbol" title="Symbol"/>
+    <integer name="decimalPlaces" title="Decimal places" default="2" min="0" max="6"/>
+  </entity>
+
+</domain-models>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/object-views https://axelor.com/xml/ns/object-views/object-views_8.0.xsd">
+
+  <grid name="currency-grid" title="Currencies" model="com.odc.reference.db.Currency">
+    <field name="code"/>
+    <field name="name"/>
+    <field name="symbol"/>
+    <field name="decimalPlaces"/>
+  </grid>
+
+  <form name="currency-form" title="Currency" model="com.odc.reference.db.Currency"
+    onSave="action-currency-validate">
+    <panel name="mainPanel">
+      <field name="code"/>
+      <field name="name"/>
+      <field name="symbol"/>
+      <field name="decimalPlaces"/>
+    </panel>
+    <panel name="actionsPanel" sidebar="true">
+      <button name="archiveBtn" title="Archive" onClick="action-currency-archive"
+        showIf="id != null &amp;&amp; archived == false"/>
+    </panel>
+  </form>
+
+  <action-view name="action-currency-view" title="Currencies"
+    model="com.odc.reference.db.Currency">
+    <view type="grid" name="currency-grid"/>
+    <view type="form" name="currency-form"/>
+    <domain>self.archived = false</domain>
+  </action-view>
+
+  <action-method name="action-currency-validate">
+    <call class="com.odc.reference.web.CurrencyController" method="validate"/>
+  </action-method>
+
+  <action-method name="action-currency-archive">
+    <call class="com.odc.reference.web.CurrencyController" method="archive"/>
+  </action-method>
+
+  <menuitem name="menu-odc-reference-root" title="Reference data" order="100"/>
+  <menuitem name="menu-odc-currency" title="Currencies" parent="menu-odc-reference-root"
+    action="action-currency-view" order="10"/>
+
+</object-views>

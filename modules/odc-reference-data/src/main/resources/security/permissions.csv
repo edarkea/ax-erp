@@ -1,0 +1,4 @@
+"name","object","canRead","canWrite","canCreate","canRemove","condition"
+"odc.reference.read","com.odc.reference.db.Currency","true","false","false","false",""
+"odc.reference.write","com.odc.reference.db.Currency","true","true","true","false",""
+"odc.reference.archive","com.odc.reference.db.Currency","true","true","false","false",""

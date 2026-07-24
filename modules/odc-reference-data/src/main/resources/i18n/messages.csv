@@ -1,0 +1,7 @@
+"key","message","comment"
+"Currency is required.","Currency is required.","Currency validation"
+"Currency code is required.","Currency code is required.","Currency validation"
+"Currency code must contain exactly three characters.","Currency code must contain exactly three characters.","Currency validation"
+"Currency decimal places must be between 0 and 6.","Currency decimal places must be between 0 and 6.","Currency validation"
+"An active currency with code {0} already exists.","An active currency with code {0} already exists.","Currency validation"
+"Currency must be saved before it can be archived.","Currency must be saved before it can be archived.","Currency validation"
