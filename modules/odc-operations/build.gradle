@@ -1,0 +1,12 @@
+plugins {
+    id 'com.axelor.app'
+}
+
+axelor {
+    title = 'ODC Operations'
+    description = 'ODC operations module'
+}
+
+dependencies {
+    api project(':modules:odc-organization')
+}

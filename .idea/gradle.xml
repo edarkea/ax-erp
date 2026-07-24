@@ -8,6 +8,18 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/modules" />
+            <option value="$PROJECT_DIR$/modules/odc-accounting" />
+            <option value="$PROJECT_DIR$/modules/odc-catalog" />
+            <option value="$PROJECT_DIR$/modules/odc-document-control" />
+            <option value="$PROJECT_DIR$/modules/odc-operations" />
+            <option value="$PROJECT_DIR$/modules/odc-organization" />
+            <option value="$PROJECT_DIR$/modules/odc-party" />
+            <option value="$PROJECT_DIR$/modules/odc-pricing" />
+            <option value="$PROJECT_DIR$/modules/odc-reference-data" />
+            <option value="$PROJECT_DIR$/modules/odc-sales" />
+            <option value="$PROJECT_DIR$/modules/odc-sales-accounting" />
+            <option value="$PROJECT_DIR$/modules/odc-tax" />
           </set>
         </option>
         <option name="myGradleHome" value="D:\developer\gradle\810" />

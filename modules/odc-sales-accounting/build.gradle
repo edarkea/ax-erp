@@ -1,0 +1,13 @@
+plugins {
+    id 'com.axelor.app'
+}
+
+axelor {
+    title = 'ODC Sales Accounting'
+    description = 'ODC sales accounting integration module'
+}
+
+dependencies {
+    api project(':modules:odc-sales')
+    api project(':modules:odc-accounting')
+}

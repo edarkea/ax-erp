@@ -1,0 +1,12 @@
+plugins {
+    id 'com.axelor.app'
+}
+
+axelor {
+    title = 'ODC Document Control'
+    description = 'ODC document control module'
+}
+
+dependencies {
+    api project(':modules:odc-organization')
+}
