@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/object-views https://axelor.com/xml/ns/object-views/object-views_8.0.xsd">
+
+  <grid name="company-grid" title="Companies" model="com.odc.organization.db.Company">
+    <field name="code"/>
+    <field name="name"/>
+    <field name="legalName"/>
+    <field name="taxId"/>
+    <field name="country"/>
+    <field name="defaultCurrency"/>
+    <field name="active"/>
+    <field name="archived"/>
+  </grid>
+
+  <form name="company-form" title="Company" model="com.odc.organization.db.Company"
+    onSave="action-company-validate">
+    <panel name="generalPanel" title="General information">
+      <field name="code"/>
+      <field name="name"/>
+      <field name="legalName"/>
+      <field name="taxId"/>
+      <field name="country" form-view="country-form" grid-view="country-grid"
+        domain="self.archived = false" onChange="action-company-propose-currency"/>
+      <field name="defaultCurrency" form-view="currency-form" grid-view="currency-grid"
+        domain="self.archived = false"/>
+      <field name="active"/>
+    </panel>
+    <panel name="regionalPanel" title="Regional configuration">
+      <field name="timezone"/>
+      <field name="locale"/>
+    </panel>
+    <panel name="branchesPanel" title="Branches" showIf="id != null">
+      <field name="branches" form-view="branch-form" grid-view="branch-grid"
+        domain="self.archived = false"/>
+    </panel>
+    <panel name="auditPanel" title="Audit" collapseIf="true">
+      <field name="createdBy" readonly="true"/>
+      <field name="createdOn" readonly="true"/>
+      <field name="updatedBy" readonly="true"/>
+      <field name="updatedOn" readonly="true"/>
+    </panel>
+  </form>
+
+  <grid name="branch-grid" title="Branches" model="com.odc.organization.db.Branch">
+    <field name="company"/>
+    <field name="code"/>
+    <field name="name"/>
+    <field name="city"/>
+    <field name="isDefault"/>
+    <field name="active"/>
+    <field name="archived"/>
+  </grid>
+
+  <form name="branch-form" title="Branch" model="com.odc.organization.db.Branch"
+    onSave="action-branch-validate">
+    <panel name="generalPanel" title="General information">
+      <field name="company" form-view="company-form" grid-view="company-grid"
+        domain="self.archived = false AND self.active = true"/>
+      <field name="code"/>
+      <field name="name"/>
+    </panel>
+    <panel name="locationPanel" title="Location">
+      <field name="city" form-view="city-form" grid-view="city-grid"
+        domain="self.archived = false AND self.state.archived = false
+          AND self.state.country.archived = false"/>
+      <field name="address"/>
+    </panel>
+    <panel name="statusPanel" title="Status">
+      <field name="isDefault"/>
+      <field name="active"/>
+      <button name="setDefaultBtn" title="Set as default"
+        onClick="action-branch-set-default"
+        showIf="id != null &amp;&amp; active &amp;&amp; !archived &amp;&amp; !isDefault"/>
+    </panel>
+    <panel name="auditPanel" title="Audit" collapseIf="true">
+      <field name="createdBy" readonly="true"/>
+      <field name="createdOn" readonly="true"/>
+      <field name="updatedBy" readonly="true"/>
+      <field name="updatedOn" readonly="true"/>
+    </panel>
+  </form>
+
+  <action-view name="action-company-view" title="Companies"
+    model="com.odc.organization.db.Company">
+    <view type="grid" name="company-grid"/>
+    <view type="form" name="company-form"/>
+    <domain>self.archived = false</domain>
+  </action-view>
+
+  <action-view name="action-branch-view" title="Branches"
+    model="com.odc.organization.db.Branch">
+    <view type="grid" name="branch-grid"/>
+    <view type="form" name="branch-form"/>
+    <domain>self.archived = false AND self.company.archived = false</domain>
+  </action-view>
+
+  <action-method name="action-company-validate">
+    <call class="com.odc.organization.web.OrganizationController" method="validateCompany"/>
+  </action-method>
+  <action-method name="action-company-propose-currency">
+    <call class="com.odc.organization.web.OrganizationController"
+      method="proposeDefaultCurrency"/>
+  </action-method>
+  <action-method name="action-branch-validate">
+    <call class="com.odc.organization.web.OrganizationController" method="validateBranch"/>
+  </action-method>
+  <action-method name="action-branch-set-default">
+    <call class="com.odc.organization.web.OrganizationController" method="setDefaultBranch"/>
+  </action-method>
+
+  <menuitem name="menu-odc-organization-root" title="Organization" order="20"/>
+  <menuitem name="menu-odc-company" title="Companies"
+    parent="menu-odc-organization-root" action="action-company-view" order="10"/>
+  <menuitem name="menu-odc-branch" title="Branches"
+    parent="menu-odc-organization-root" action="action-branch-view" order="20"/>
+
+</object-views>

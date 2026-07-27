@@ -1,0 +1,7 @@
+"name","object","canRead","canWrite","canCreate","canRemove","condition"
+"odc.organization.company.read","com.odc.organization.db.Company","true","false","false","false",""
+"odc.organization.company.write","com.odc.organization.db.Company","true","true","true","false",""
+"odc.organization.company.archive","com.odc.organization.db.Company","true","true","false","false",""
+"odc.organization.branch.read","com.odc.organization.db.Branch","true","false","false","false",""
+"odc.organization.branch.write","com.odc.organization.db.Branch","true","true","true","false",""
+"odc.organization.branch.archive","com.odc.organization.db.Branch","true","true","false","false",""

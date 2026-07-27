@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<domain-models xmlns="http://axelor.com/xml/ns/domain-models"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/domain-models https://axelor.com/xml/ns/domain-models/domain-models_8.0.xsd">
+
+  <module name="odc-organization" package="com.odc.organization.db"/>
+
+  <entity name="Branch" table="odc_branch"
+    extends="com.odc.organization.db.OdcAuditableModel">
+    <many-to-one name="company" title="Company" ref="Company" required="true"/>
+    <string name="code" title="Code" required="true"/>
+    <string name="name" title="Name" required="true" namecolumn="true"/>
+    <many-to-one name="city" title="City" ref="com.odc.reference.db.City"/>
+    <string name="address" title="Address" large="true"/>
+    <boolean name="isDefault" title="Default" default="false"/>
+    <boolean name="active" title="Active" default="true"/>
+  </entity>
+
+</domain-models>

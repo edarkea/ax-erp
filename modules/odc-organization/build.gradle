@@ -9,4 +9,5 @@ axelor {
 
 dependencies {
     api project(':modules:odc-reference-data')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
 }
