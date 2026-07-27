@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/object-views https://axelor.com/xml/ns/object-views/object-views_8.0.xsd">
+  <grid name="user-company-access-grid" title="Company accesses"
+    model="com.odc.organization.db.UserCompanyAccess">
+    <field name="user"/><field name="company"/><field name="isDefault"/>
+    <field name="active"/><field name="archived"/><field name="createdOn"/>
+  </grid>
+  <form name="user-company-access-form" title="Company access"
+    model="com.odc.organization.db.UserCompanyAccess">
+    <panel><field name="user"/><field name="company"
+      domain="self.archived = false AND self.active = true"/>
+      <field name="isDefault"/><field name="active"/>
+      <button name="defaultCompanyBtn" title="Set as default"
+        onClick="action-company-access-default" showIf="id != null &amp;&amp; active &amp;&amp; !isDefault"/>
+      <button name="activateCompanyBtn" title="Activate"
+        onClick="action-company-access-activate" showIf="id != null &amp;&amp; !active"/>
+      <button name="deactivateCompanyBtn" title="Deactivate"
+        onClick="action-company-access-deactivate" showIf="id != null &amp;&amp; active"/>
+    </panel>
+  </form>
+  <grid name="user-branch-access-grid" title="Branch accesses"
+    model="com.odc.organization.db.UserBranchAccess">
+    <field name="user"/><field name="branch.company"/><field name="branch"/>
+    <field name="isDefault"/><field name="active"/><field name="archived"/>
+  </grid>
+  <form name="user-branch-access-form" title="Branch access"
+    model="com.odc.organization.db.UserBranchAccess">
+    <panel><field name="user"/><field name="branch"
+      domain="self.archived = false AND self.active = true
+        AND self.company.archived = false AND self.company.active = true"/>
+      <field name="isDefault"/><field name="active"/>
+      <button name="defaultBranchBtn" title="Set as default"
+        onClick="action-branch-access-default" showIf="id != null &amp;&amp; active &amp;&amp; !isDefault"/>
+      <button name="activateBranchBtn" title="Activate"
+        onClick="action-branch-access-activate" showIf="id != null &amp;&amp; !active"/>
+      <button name="deactivateBranchBtn" title="Deactivate"
+        onClick="action-branch-access-deactivate" showIf="id != null &amp;&amp; active"/>
+    </panel>
+  </form>
+  <grid name="odc-user-preference-grid" title="ODC user preferences"
+    model="com.odc.organization.db.OdcUserPreference">
+    <field name="user"/><field name="theme"/><field name="locale"/>
+    <field name="navigationMode"/><field name="archived"/>
+  </grid>
+  <form name="odc-user-preference-form" title="ODC user preference"
+    model="com.odc.organization.db.OdcUserPreference">
+    <panel><field name="user"/><field name="theme"/><field name="locale"/>
+      <field name="navigationMode"/><field name="profileImage"/></panel>
+  </form>
+  <action-view name="action-user-company-access-view" title="Company accesses"
+    model="com.odc.organization.db.UserCompanyAccess">
+    <view type="grid" name="user-company-access-grid"/>
+    <view type="form" name="user-company-access-form"/>
+    <domain>self.archived = false</domain>
+  </action-view>
+  <action-view name="action-user-branch-access-view" title="Branch accesses"
+    model="com.odc.organization.db.UserBranchAccess">
+    <view type="grid" name="user-branch-access-grid"/>
+    <view type="form" name="user-branch-access-form"/>
+    <domain>self.archived = false</domain>
+  </action-view>
+  <action-view name="action-odc-user-preference-view" title="ODC user preferences"
+    model="com.odc.organization.db.OdcUserPreference">
+    <view type="grid" name="odc-user-preference-grid"/>
+    <view type="form" name="odc-user-preference-form"/>
+    <domain>self.archived = false</domain>
+  </action-view>
+  <action-method name="action-company-access-default"><call
+    class="com.odc.organization.web.OrganizationAccessController" method="setDefaultCompany"/></action-method>
+  <action-method name="action-company-access-activate"><call
+    class="com.odc.organization.web.OrganizationAccessController" method="activateCompany"/></action-method>
+  <action-method name="action-company-access-deactivate"><call
+    class="com.odc.organization.web.OrganizationAccessController" method="deactivateCompany"/></action-method>
+  <action-method name="action-branch-access-default"><call
+    class="com.odc.organization.web.OrganizationAccessController" method="setDefaultBranch"/></action-method>
+  <action-method name="action-branch-access-activate"><call
+    class="com.odc.organization.web.OrganizationAccessController" method="activateBranch"/></action-method>
+  <action-method name="action-branch-access-deactivate"><call
+    class="com.odc.organization.web.OrganizationAccessController" method="deactivateBranch"/></action-method>
+  <menuitem name="menu-odc-company-access" title="Company accesses"
+    parent="menu-odc-organization-root" action="action-user-company-access-view" order="30"/>
+  <menuitem name="menu-odc-branch-access" title="Branch accesses"
+    parent="menu-odc-organization-root" action="action-user-branch-access-view" order="40"/>
+  <menuitem name="menu-odc-user-preference" title="User preferences"
+    parent="menu-odc-organization-root" action="action-odc-user-preference-view" order="50"/>
+</object-views>

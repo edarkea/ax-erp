@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<domain-models xmlns="http://axelor.com/xml/ns/domain-models"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/domain-models https://axelor.com/xml/ns/domain-models/domain-models_8.0.xsd">
+  <module name="odc-organization" package="com.odc.organization.db"/>
+  <entity name="UserBranchAccess" table="odc_user_branch_access"
+    extends="com.odc.organization.db.OdcAuditableModel">
+    <many-to-one name="user" title="User" ref="com.axelor.auth.db.User"
+      column="user_id" required="true"/>
+    <many-to-one name="branch" title="Branch" ref="Branch" required="true"/>
+    <boolean name="isDefault" title="Default" default="false"/>
+    <boolean name="active" title="Active" default="true"/>
+  </entity>
+</domain-models>

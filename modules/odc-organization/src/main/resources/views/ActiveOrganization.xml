@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/object-views https://axelor.com/xml/ns/object-views/object-views_8.0.xsd">
+  <form name="active-organization-form" title="Organizational context"
+    model="com.odc.organization.db.OrganizationContextSelector"
+    onLoad="action-active-organization-load">
+    <panel>
+      <field name="company" domain="self.active = true AND self.archived = false"
+        onChange="action-active-organization-company-change"/>
+      <field name="branch" domain="self.company = :company AND self.active = true
+        AND self.archived = false"/>
+      <button name="applyBtn" title="Apply context" onClick="action-active-organization-apply"/>
+      <button name="clearBranchBtn" title="Clear branch"
+        onClick="action-active-organization-clear-branch"/>
+      <button name="clearBtn" title="Clear context"
+        onClick="action-active-organization-clear"/>
+    </panel>
+  </form>
+  <action-view name="action-active-organization-view" title="Organizational context"
+    model="com.odc.organization.db.OrganizationContextSelector">
+    <view type="form" name="active-organization-form"/>
+  </action-view>
+  <action-method name="action-active-organization-load"><call
+    class="com.odc.organization.web.ActiveOrganizationController" method="load"/></action-method>
+  <action-method name="action-active-organization-apply"><call
+    class="com.odc.organization.web.ActiveOrganizationController" method="apply"/></action-method>
+  <action-method name="action-active-organization-clear-branch"><call
+    class="com.odc.organization.web.ActiveOrganizationController" method="clearBranch"/></action-method>
+  <action-method name="action-active-organization-clear"><call
+    class="com.odc.organization.web.ActiveOrganizationController" method="clearContext"/></action-method>
+  <action-method name="action-active-organization-company-change"><call
+    class="com.odc.organization.web.ActiveOrganizationController" method="companyChanged"/></action-method>
+  <menuitem name="menu-odc-active-organization" title="Organizational context"
+    parent="menu-odc-organization-root" action="action-active-organization-view" order="5"/>
+</object-views>

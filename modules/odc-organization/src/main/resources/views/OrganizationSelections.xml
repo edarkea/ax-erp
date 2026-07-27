@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/object-views https://axelor.com/xml/ns/object-views/object-views_8.0.xsd">
+  <selection name="odc.organization.theme">
+    <option value="SYSTEM">System</option>
+    <option value="LIGHT">Light</option>
+    <option value="DARK">Dark</option>
+  </selection>
+  <selection name="odc.organization.navigation.mode">
+    <option value="SIDEBAR">Sidebar</option>
+    <option value="COMPACT">Compact</option>
+    <option value="EXPANDED">Expanded</option>
+  </selection>
+</object-views>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<domain-models xmlns="http://axelor.com/xml/ns/domain-models"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/domain-models https://axelor.com/xml/ns/domain-models/domain-models_8.0.xsd">
+  <module name="odc-organization" package="com.odc.organization.db"/>
+  <entity name="OdcUserPreference" table="odc_user_preference"
+    extends="com.odc.organization.db.OdcAuditableModel">
+    <many-to-one name="user" title="User" ref="com.axelor.auth.db.User"
+      column="user_id" required="true"/>
+    <string name="theme" title="Theme" selection="odc.organization.theme" default="SYSTEM"/>
+    <string name="locale" title="Locale"/>
+    <string name="navigationMode" title="Navigation mode"
+      selection="odc.organization.navigation.mode" default="SIDEBAR"/>
+    <many-to-one name="profileImage" title="Profile image" ref="com.axelor.meta.db.MetaFile"/>
+  </entity>
+</domain-models>
