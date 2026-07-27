@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<domain-models xmlns="http://axelor.com/xml/ns/domain-models"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/domain-models https://axelor.com/xml/ns/domain-models/domain-models_8.0.xsd">
+
+  <module name="odc-reference" package="com.odc.reference.db"/>
+
+  <entity name="Country" table="odc_country">
+    <string name="code" title="Code" required="true"/>
+    <string name="name" title="Name" required="true"/>
+    <string name="phoneCode" title="Phone code"/>
+    <many-to-one name="defaultCurrency" title="Default currency" ref="Currency"/>
+    <one-to-many name="states" title="States" ref="State" mappedBy="country"/>
+  </entity>
+
+</domain-models>

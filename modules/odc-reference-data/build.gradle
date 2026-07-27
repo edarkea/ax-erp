@@ -8,5 +8,6 @@ axelor {
 }
 
 dependencies {
+    api project(':modules:odc-common')
     testImplementation 'org.junit.jupiter:junit-jupiter'
 }

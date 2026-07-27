@@ -1,0 +1,8 @@
+plugins {
+    id 'com.axelor.app'
+}
+
+axelor {
+    title = 'ODC Common'
+    description = 'Shared infrastructure utilities for ODC modules'
+}

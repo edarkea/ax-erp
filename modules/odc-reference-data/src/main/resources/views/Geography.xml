@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/object-views https://axelor.com/xml/ns/object-views/object-views_8.0.xsd">
+
+  <grid name="country-grid" title="Countries" model="com.odc.reference.db.Country">
+    <field name="code"/>
+    <field name="name"/>
+    <field name="phoneCode"/>
+    <field name="defaultCurrency"/>
+  </grid>
+
+  <form name="country-form" title="Country" model="com.odc.reference.db.Country"
+    onSave="action-country-validate">
+    <panel name="mainPanel">
+      <field name="code"/>
+      <field name="name"/>
+      <field name="phoneCode"/>
+      <field name="defaultCurrency" form-view="currency-form" grid-view="currency-grid"
+        domain="self.archived = false"/>
+    </panel>
+    <panel name="statesPanel" title="States" showIf="id != null">
+      <field name="states" form-view="state-form" grid-view="state-grid"
+        domain="self.archived = false"/>
+    </panel>
+  </form>
+
+  <grid name="state-grid" title="States" model="com.odc.reference.db.State">
+    <field name="code"/>
+    <field name="name"/>
+    <field name="country"/>
+  </grid>
+
+  <form name="state-form" title="State" model="com.odc.reference.db.State"
+    onSave="action-state-validate">
+    <panel name="mainPanel">
+      <field name="code"/>
+      <field name="name"/>
+      <field name="country" form-view="country-form" grid-view="country-grid"
+        domain="self.archived = false"/>
+    </panel>
+    <panel name="citiesPanel" title="Cities" showIf="id != null">
+      <field name="cities" form-view="city-form" grid-view="city-grid"
+        domain="self.archived = false"/>
+    </panel>
+  </form>
+
+  <grid name="city-grid" title="Cities" model="com.odc.reference.db.City">
+    <field name="code"/>
+    <field name="name"/>
+    <field name="state"/>
+    <field name="state.country" title="Country"/>
+  </grid>
+
+  <form name="city-form" title="City" model="com.odc.reference.db.City"
+    onSave="action-city-validate">
+    <panel name="mainPanel">
+      <field name="code"/>
+      <field name="name"/>
+      <field name="state" form-view="state-form" grid-view="state-grid"
+        domain="self.archived = false AND self.country.archived = false"/>
+    </panel>
+  </form>
+
+  <action-view name="action-country-view" title="Countries"
+    model="com.odc.reference.db.Country">
+    <view type="grid" name="country-grid"/>
+    <view type="form" name="country-form"/>
+    <domain>self.archived = false</domain>
+  </action-view>
+
+  <action-view name="action-state-view" title="States" model="com.odc.reference.db.State">
+    <view type="grid" name="state-grid"/>
+    <view type="form" name="state-form"/>
+    <domain>self.archived = false AND self.country.archived = false</domain>
+  </action-view>
+
+  <action-view name="action-city-view" title="Cities" model="com.odc.reference.db.City">
+    <view type="grid" name="city-grid"/>
+    <view type="form" name="city-form"/>
+    <domain>
+      self.archived = false AND self.state.archived = false
+      AND self.state.country.archived = false
+    </domain>
+  </action-view>
+
+  <action-method name="action-country-validate">
+    <call class="com.odc.reference.web.GeographyController" method="validateCountry"/>
+  </action-method>
+
+  <action-method name="action-state-validate">
+    <call class="com.odc.reference.web.GeographyController" method="validateState"/>
+  </action-method>
+
+  <action-method name="action-city-validate">
+    <call class="com.odc.reference.web.GeographyController" method="validateCity"/>
+  </action-method>
+
+  <menuitem name="menu-odc-country" title="Countries" parent="menu-odc-reference-root"
+    action="action-country-view" order="20"/>
+  <menuitem name="menu-odc-state" title="States" parent="menu-odc-reference-root"
+    action="action-state-view" order="30"/>
+  <menuitem name="menu-odc-city" title="Cities" parent="menu-odc-reference-root"
+    action="action-city-view" order="40"/>
+
+</object-views>

@@ -18,17 +18,21 @@ Migrar el dominio Prisma de ODC a módulos Axelor fijos, organizados por negocio
 
 ## Módulos definitivos
 
-1. `odc-reference-data`
-2. `odc-organization`
-3. `odc-operations`
-4. `odc-tax`
-5. `odc-party`
-6. `odc-catalog`
-7. `odc-pricing`
-8. `odc-document-control`
-9. `odc-accounting`
-10. `odc-sales`
-11. `odc-sales-accounting`
+1. `odc-common`
+2. `odc-reference-data`
+3. `odc-organization`
+4. `odc-operations`
+5. `odc-tax`
+6. `odc-party`
+7. `odc-catalog`
+8. `odc-pricing`
+9. `odc-document-control`
+10. `odc-accounting`
+11. `odc-sales`
+12. `odc-sales-accounting`
+
+`odc-common` contiene únicamente infraestructura reutilizable y depende de Axelor Open Platform.
+Los módulos de negocio pueden depender de él cuando consuman alguna de sus capacidades.
 
 ## Fases
 

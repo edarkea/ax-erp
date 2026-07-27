@@ -11,6 +11,7 @@
             <option value="$PROJECT_DIR$/modules" />
             <option value="$PROJECT_DIR$/modules/odc-accounting" />
             <option value="$PROJECT_DIR$/modules/odc-catalog" />
+            <option value="$PROJECT_DIR$/modules/odc-common" />
             <option value="$PROJECT_DIR$/modules/odc-document-control" />
             <option value="$PROJECT_DIR$/modules/odc-operations" />
             <option value="$PROJECT_DIR$/modules/odc-organization" />

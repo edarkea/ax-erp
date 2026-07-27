@@ -30,7 +30,9 @@ allprojects {
 }
 
 dependencies {
-
+  gradle.appModules.each { dir ->
+    implementation project(":modules:$dir.name")
+  }
 }
 
 war {
