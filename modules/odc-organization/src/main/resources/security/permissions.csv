@@ -16,3 +16,4 @@
 "odc.organization.context.read","com.odc.organization.db.OrganizationContextSelector","true","false","false","false",""
 "odc.organization.context.select","com.odc.organization.db.OrganizationContextSelector","true","true","true","false",""
 "odc.organization.context.clear","com.odc.organization.db.OrganizationContextSelector","true","true","false","false",""
+"odc.organization.context.retry","com.odc.organization.db.OrganizationContextSelector","true","true","false","false",""

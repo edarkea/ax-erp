@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import com.axelor.auth.db.User;
 import com.odc.organization.context.CurrentUserProvider;
 import com.odc.organization.context.OrganizationContextStoreTest.MemoryStore;
+import com.odc.organization.context.OrganizationContextStatus;
 import com.odc.organization.db.Branch;
 import com.odc.organization.db.Company;
 import java.util.*;
@@ -38,6 +39,41 @@ class ActiveOrganizationServiceImplTest {
     user = null;
     assertTrue(service.getActiveCompany().isEmpty());
     assertThrows(IllegalArgumentException.class, service::requireActiveCompany);
+  }
+
+  @Test
+  void shouldInitializeVisibleLoginStatesWithoutGrantingAccess() {
+    access.companies = List.of();
+    assertEquals(
+        OrganizationContextStatus.NO_COMPANY_ACCESS,
+        service.initializeContextAfterLogin(user).status());
+    assertTrue(store.getCompanyId().isEmpty());
+
+    access.companies = List.of(a, b);
+    assertEquals(
+        OrganizationContextStatus.COMPANY_SELECTION_REQUIRED,
+        service.initializeContextAfterLogin(user).status());
+    assertTrue(store.getCompanyId().isEmpty());
+
+    access.companies = List.of(a);
+    assertEquals(
+        OrganizationContextStatus.COMPANY_RESOLVED,
+        service.initializeContextAfterLogin(user).status());
+    assertEquals(Optional.of(1L), store.getCompanyId());
+  }
+
+  @Test
+  void shouldInitializeDefaultCompanyAndCompatibleBranch() {
+    access.companies = List.of(a, b);
+    access.branches = List.of(a1);
+    service.defaultCompanies = List.of(a);
+    service.defaultBranches = List.of(a1);
+    var result = service.initializeContextAfterLogin(user);
+    assertEquals(OrganizationContextStatus.COMPANY_AND_BRANCH_RESOLVED, result.status());
+    assertSame(a, result.company());
+    assertSame(a1, result.branch());
+    assertEquals(Optional.of(1L), store.getCompanyId());
+    assertEquals(Optional.of(11L), store.getBranchId());
   }
 
   @Test

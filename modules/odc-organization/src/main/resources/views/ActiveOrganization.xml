@@ -6,7 +6,14 @@
     model="com.odc.organization.db.OrganizationContextSelector"
     onLoad="action-active-organization-load">
     <panel>
-      <field name="company" domain="self.active = true AND self.archived = false"
+      <field name="userName" readonly="true"/>
+      <field name="status" hidden="true"/>
+      <field name="message" readonly="true" colSpan="12"/>
+    </panel>
+    <panel name="selectionPanel"
+      showIf="status != 'NO_COMPANY_ACCESS'">
+      <field name="company" requiredIf="status == 'COMPANY_SELECTION_REQUIRED'"
+        domain="self.active = true AND self.archived = false"
         onChange="action-active-organization-company-change"/>
       <field name="branch" domain="self.company = :company AND self.active = true
         AND self.archived = false"/>
@@ -15,6 +22,10 @@
         onClick="action-active-organization-clear-branch"/>
       <button name="clearBtn" title="Clear context"
         onClick="action-active-organization-clear"/>
+    </panel>
+    <panel name="noAccessPanel" showIf="status == 'NO_COMPANY_ACCESS'">
+      <button name="retryBtn" title="Check access again"
+        onClick="action-active-organization-retry"/>
     </panel>
   </form>
   <action-view name="action-active-organization-view" title="Organizational context"
@@ -31,6 +42,8 @@
     class="com.odc.organization.web.ActiveOrganizationController" method="clearContext"/></action-method>
   <action-method name="action-active-organization-company-change"><call
     class="com.odc.organization.web.ActiveOrganizationController" method="companyChanged"/></action-method>
+  <action-method name="action-active-organization-retry"><call
+    class="com.odc.organization.web.ActiveOrganizationController" method="retry"/></action-method>
   <menuitem name="menu-odc-active-organization" title="Organizational context"
     parent="menu-odc-organization-root" action="action-active-organization-view" order="5"/>
 </object-views>

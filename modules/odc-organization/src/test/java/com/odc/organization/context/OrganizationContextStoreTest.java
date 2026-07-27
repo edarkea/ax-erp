@@ -29,13 +29,15 @@ public class OrganizationContextStoreTest {
   }
 
   public static class MemoryStore implements OrganizationContextStore {
-    Long company; Long branch;
+    Long company; Long branch; OrganizationContextStatus status;
     public Optional<Long> getCompanyId() { return Optional.ofNullable(company); }
     public void setCompanyId(Long id) { company = id; }
     public void clearCompanyId() { company = null; }
     public Optional<Long> getBranchId() { return Optional.ofNullable(branch); }
     public void setBranchId(Long id) { branch = id; }
     public void clearBranchId() { branch = null; }
-    public void clear() { company = null; branch = null; }
+    public Optional<OrganizationContextStatus> getStatus() { return Optional.ofNullable(status); }
+    public void setStatus(OrganizationContextStatus value) { status = value; }
+    public void clear() { company = null; branch = null; status = null; }
   }
 }
