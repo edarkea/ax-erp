@@ -13,11 +13,7 @@ public class CurrencyController {
     Beans.get(CurrencyService.class).validate(currency);
     response.setValue("code", currency.getCode());
     response.setValue("decimalPlaces", currency.getDecimalPlaces());
+    response.setValue("archived", currency.getArchived());
   }
 
-  public void archive(ActionRequest request, ActionResponse response) {
-    Currency currency = request.getContext().asType(Currency.class);
-    Beans.get(CurrencyService.class).archive(currency);
-    response.setReload(true);
-  }
 }

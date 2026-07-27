@@ -18,25 +18,16 @@
       <field name="symbol"/>
       <field name="decimalPlaces"/>
     </panel>
-    <panel name="actionsPanel" sidebar="true">
-      <button name="archiveBtn" title="Archive" onClick="action-currency-archive"
-        showIf="id != null &amp;&amp; archived == false"/>
-    </panel>
   </form>
 
   <action-view name="action-currency-view" title="Currencies"
     model="com.odc.reference.db.Currency">
     <view type="grid" name="currency-grid"/>
     <view type="form" name="currency-form"/>
-    <domain>self.archived = false</domain>
   </action-view>
 
   <action-method name="action-currency-validate">
     <call class="com.odc.reference.web.CurrencyController" method="validate"/>
-  </action-method>
-
-  <action-method name="action-currency-archive">
-    <call class="com.odc.reference.web.CurrencyController" method="archive"/>
   </action-method>
 
   <menuitem name="menu-odc-reference-root" title="Reference data" order="100"/>

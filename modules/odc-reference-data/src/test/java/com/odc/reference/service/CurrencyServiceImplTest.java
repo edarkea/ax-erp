@@ -28,7 +28,17 @@ class CurrencyServiceImplTest {
     assertSame(currency, saved);
     assertEquals("USD", saved.getCode());
     assertEquals(2, saved.getDecimalPlaces());
+    assertFalse(saved.getArchived());
     assertSame(currency, service.persisted);
+  }
+
+  @Test
+  void shouldInitializeArchivedDuringFormValidation() {
+    Currency currency = currency("EUR", 2);
+
+    service.validate(currency);
+
+    assertFalse(currency.getArchived());
   }
 
   @Test
@@ -52,19 +62,6 @@ class CurrencyServiceImplTest {
   void shouldRejectDecimalPlacesOutsideRange() {
     assertThrows(IllegalArgumentException.class, () -> service.save(currency("USD", -1)));
     assertThrows(IllegalArgumentException.class, () -> service.save(currency("USD", 7)));
-  }
-
-  @Test
-  void shouldArchiveWithoutDeleting() {
-    Currency currency = currency("USD", 2);
-    currency.setId(1L);
-
-    Currency archived = service.archive(currency);
-
-    assertSame(currency, archived);
-    assertTrue(archived.getArchived());
-    assertSame(currency, service.persisted);
-    assertEquals(1, service.persistCount);
   }
 
   @Test

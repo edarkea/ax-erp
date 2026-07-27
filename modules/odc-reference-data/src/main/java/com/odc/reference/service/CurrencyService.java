@@ -6,7 +6,5 @@ public interface CurrencyService {
 
   Currency save(Currency currency);
 
-  Currency archive(Currency currency);
-
   void validate(Currency currency);
 }
