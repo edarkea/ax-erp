@@ -1,0 +1,37 @@
+"key","message","comment","context"
+"Cities","Ciudades",,"resources\domains\State.xml:12
+resources\views\Geography.xml:104
+resources\views\Geography.xml:42
+resources\views\Geography.xml:48
+resources\views\Geography.xml:78"
+"City","Ciudad",,"resources\views\Geography.xml:56"
+"Code","Código",,"resources\domains\City.xml:9
+resources\domains\Country.xml:9
+resources\domains\Currency.xml:9
+resources\domains\State.xml:9"
+"Countries","Paises",,"resources\views\Geography.xml:100
+resources\views\Geography.xml:6
+resources\views\Geography.xml:66"
+"Country","País",,"resources\domains\State.xml:11
+resources\views\Geography.xml:14
+resources\views\Geography.xml:52"
+"Currencies","Monedas",,"resources\views\Currency.xml:24
+resources\views\Currency.xml:35
+resources\views\Currency.xml:6"
+"Currency","Moneda",,"resources\views\Currency.xml:14"
+"Decimal places","Posición decimal",,"resources\domains\Currency.xml:12"
+"Default currency","Moneda por defecto",,"resources\domains\Country.xml:12"
+"Name","Nombre",,"resources\domains\City.xml:10
+resources\domains\Country.xml:10
+resources\domains\Currency.xml:10
+resources\domains\State.xml:10"
+"Phone code","Código celular",,"resources\domains\Country.xml:11"
+"Reference data","Datos de referencia",,"resources\views\Currency.xml:33"
+"State","Estado/Provincia",,"resources\domains\City.xml:11
+resources\views\Geography.xml:35"
+"States","Estados/Provincias",,"resources\domains\Country.xml:13
+resources\views\Geography.xml:102
+resources\views\Geography.xml:22
+resources\views\Geography.xml:28
+resources\views\Geography.xml:72"
+"Symbol","Símbolo",,"resources\domains\Currency.xml:11"
