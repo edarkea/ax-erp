@@ -15,6 +15,7 @@ public class OdcAccountingModule extends AxelorModule {
         .to(AccountingRoleDefinitionSeedServiceImpl.class);
     bind(AccountingSetupEntryService.class).to(AccountingSetupEntryServiceImpl.class);
     bind(AccountingSetupResolver.class).to(AccountingSetupResolverImpl.class);
+    bind(AccountingPeriodService.class).to(AccountingPeriodServiceImpl.class);
     bind(AccountingSaveObserver.class);
   }
 }

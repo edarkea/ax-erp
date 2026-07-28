@@ -5,7 +5,9 @@ import com.axelor.rpc.ActionRequest;
 import com.axelor.rpc.ActionResponse;
 import com.axelor.meta.schema.actions.ActionView;
 import com.odc.accounting.db.AccountingSetupEntry;
+import com.odc.accounting.db.AccountingPeriod;
 import com.odc.accounting.db.ChartAccount;
+import com.odc.accounting.service.AccountingPeriodService;
 import com.odc.organization.db.Company;
 import com.odc.organization.service.ActiveOrganizationService;
 
@@ -41,6 +43,47 @@ public class AccountingController {
             .add("form", "accounting-setup-entry-form")
             .domain("self.archived = false AND self.company.id = " + company.getId())
             .map());
+  }
+
+  public void openPeriods(ActionRequest request, ActionResponse response) {
+    Company company = Beans.get(ActiveOrganizationService.class).requireActiveCompany();
+    response.setView(
+        ActionView.define("Accounting periods")
+            .model(AccountingPeriod.class.getName())
+            .add("grid", "accounting-period-grid")
+            .add("form", "accounting-period-form")
+            .domain("self.company.id = " + company.getId())
+            .map());
+  }
+
+  public void openPeriod(ActionRequest request, ActionResponse response) {
+    Beans.get(AccountingPeriodService.class)
+        .open(request.getContext().asType(AccountingPeriod.class));
+    response.setReload(true);
+  }
+
+  public void closePeriod(ActionRequest request, ActionResponse response) {
+    Beans.get(AccountingPeriodService.class)
+        .close(request.getContext().asType(AccountingPeriod.class));
+    response.setReload(true);
+  }
+
+  public void reopenPeriod(ActionRequest request, ActionResponse response) {
+    Beans.get(AccountingPeriodService.class)
+        .reopen(request.getContext().asType(AccountingPeriod.class));
+    response.setReload(true);
+  }
+
+  public void archivePeriod(ActionRequest request, ActionResponse response) {
+    Beans.get(AccountingPeriodService.class)
+        .archive(request.getContext().asType(AccountingPeriod.class));
+    response.setReload(true);
+  }
+
+  public void restorePeriod(ActionRequest request, ActionResponse response) {
+    Beans.get(AccountingPeriodService.class)
+        .restore(request.getContext().asType(AccountingPeriod.class));
+    response.setReload(true);
   }
 
   public void configureAccountParentDomain(ActionRequest request, ActionResponse response) {

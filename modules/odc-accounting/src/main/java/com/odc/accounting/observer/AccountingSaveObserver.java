@@ -9,9 +9,11 @@ import com.axelor.events.StartupEvent;
 import com.axelor.events.qualifiers.EntityType;
 import com.odc.accounting.db.AccountingRoleDefinition;
 import com.odc.accounting.db.AccountingSetupEntry;
+import com.odc.accounting.db.AccountingPeriod;
 import com.odc.accounting.db.ChartAccount;
 import com.odc.accounting.service.AccountingRoleDefinitionService;
 import com.odc.accounting.service.AccountingRoleDefinitionSeedService;
+import com.odc.accounting.service.AccountingPeriodService;
 import com.odc.accounting.service.AccountingSetupEntryService;
 import com.odc.accounting.service.ChartAccountService;
 import jakarta.inject.Inject;
@@ -22,17 +24,20 @@ public class AccountingSaveObserver {
   private final AccountingRoleDefinitionService roleService;
   private final AccountingSetupEntryService setupService;
   private final AccountingRoleDefinitionSeedService seedService;
+  private final AccountingPeriodService periodService;
 
   @Inject
   public AccountingSaveObserver(
       ChartAccountService accountService,
       AccountingRoleDefinitionService roleService,
       AccountingSetupEntryService setupService,
-      AccountingRoleDefinitionSeedService seedService) {
+      AccountingRoleDefinitionSeedService seedService,
+      AccountingPeriodService periodService) {
     this.accountService = accountService;
     this.roleService = roleService;
     this.setupService = setupService;
     this.seedService = seedService;
+    this.periodService = periodService;
   }
   public void startup(@Observes StartupEvent event) { seedService.seed(); }
   public void account(
@@ -48,5 +53,9 @@ public class AccountingSaveObserver {
       @Observes @Named(RequestEvent.SAVE) @EntityType(AccountingSetupEntry.class)
           PreRequest event) {
     process(event, AccountingSetupEntry.class, setupService::validate);
+  }
+  public void period(
+      @Observes @Named(RequestEvent.SAVE) @EntityType(AccountingPeriod.class) PreRequest event) {
+    process(event, AccountingPeriod.class, periodService::validate);
   }
 }

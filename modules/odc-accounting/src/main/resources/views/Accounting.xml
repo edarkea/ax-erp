@@ -24,6 +24,43 @@
     <option value="DEBIT">Debit</option><option value="CREDIT">Credit</option>
     <option value="EITHER">Either</option>
   </selection>
+  <selection name="odc.accounting.period.status">
+    <option value="DRAFT">Draft</option>
+    <option value="OPEN">Open</option>
+    <option value="CLOSED">Closed</option>
+  </selection>
+
+  <grid name="accounting-period-grid" title="Accounting periods"
+    model="com.odc.accounting.db.AccountingPeriod" orderBy="-startDate">
+    <field name="company"/><field name="code"/><field name="name"/>
+    <field name="startDate"/><field name="endDate"/><field name="status"/>
+    <field name="sequence"/><field name="archived"/>
+  </grid>
+  <form name="accounting-period-form" title="Accounting period"
+    model="com.odc.accounting.db.AccountingPeriod"
+    onNew="action-odc-accounting-load-company">
+    <panel title="General information"><field name="company" readonly="true"/>
+      <field name="code" readonlyIf="status != 'DRAFT'"/>
+      <field name="name" readonlyIf="status == 'CLOSED'"/>
+      <field name="startDate" readonlyIf="status != 'DRAFT'"/>
+      <field name="endDate" readonlyIf="status != 'DRAFT'"/>
+      <field name="sequence" readonlyIf="status == 'CLOSED'"/></panel>
+    <panel title="Status"><field name="status" readonly="true"/>
+      <button name="openPeriodBtn" title="Open" showIf="id != null &amp;&amp; status == 'DRAFT' &amp;&amp; !archived"
+        onClick="action-odc-accounting-period-open"/>
+      <button name="closePeriodBtn" title="Close" showIf="status == 'OPEN' &amp;&amp; !archived"
+        onClick="action-odc-accounting-period-close"/>
+      <button name="reopenPeriodBtn" title="Reopen" showIf="status == 'CLOSED' &amp;&amp; !archived"
+        onClick="action-odc-accounting-period-reopen"/>
+      <button name="archivePeriodBtn" title="Archive" showIf="id != null &amp;&amp; status == 'DRAFT' &amp;&amp; !archived"
+        onClick="action-odc-accounting-period-archive"/>
+      <button name="restorePeriodBtn" title="Restore" showIf="archived"
+        onClick="action-odc-accounting-period-restore"/></panel>
+    <panel title="Notes"><field name="notes" readonlyIf="status == 'CLOSED'"/></panel>
+    <panel title="Audit" showIf="id != null" collapse="true"><field name="createdBy" readonly="true"/>
+      <field name="createdOn" readonly="true"/><field name="updatedBy" readonly="true"/>
+      <field name="updatedOn" readonly="true"/></panel>
+  </form>
 
   <grid name="chart-account-grid" title="Chart of accounts" model="com.odc.accounting.db.ChartAccount">
     <field name="company"/><field name="code"/><field name="name"/><field name="accountType"/>
@@ -119,6 +156,24 @@
   <action-method name="action-odc-accounting-open-setup">
     <call class="com.odc.accounting.web.AccountingController" method="openSetup"/>
   </action-method>
+  <action-method name="action-odc-accounting-open-periods">
+    <call class="com.odc.accounting.web.AccountingController" method="openPeriods"/>
+  </action-method>
+  <action-method name="action-odc-accounting-period-open">
+    <call class="com.odc.accounting.web.AccountingController" method="openPeriod"/>
+  </action-method>
+  <action-method name="action-odc-accounting-period-close">
+    <call class="com.odc.accounting.web.AccountingController" method="closePeriod"/>
+  </action-method>
+  <action-method name="action-odc-accounting-period-reopen">
+    <call class="com.odc.accounting.web.AccountingController" method="reopenPeriod"/>
+  </action-method>
+  <action-method name="action-odc-accounting-period-archive">
+    <call class="com.odc.accounting.web.AccountingController" method="archivePeriod"/>
+  </action-method>
+  <action-method name="action-odc-accounting-period-restore">
+    <call class="com.odc.accounting.web.AccountingController" method="restorePeriod"/>
+  </action-method>
   <action-view name="action-chart-account-view" title="Chart of accounts"
     model="com.odc.accounting.db.ChartAccount">
     <view type="grid" name="chart-account-grid"/><view type="form" name="chart-account-form"/>
@@ -150,4 +205,6 @@
     parent="menu-odc-accounting-root" action="action-accounting-role-definition-view" order="30"/>
   <menuitem name="menu-odc-accounting-setup" title="Accounting setup"
     parent="menu-odc-accounting-root" action="action-odc-accounting-open-setup" order="40"/>
+  <menuitem name="menu-odc-accounting-period" title="Accounting periods"
+    parent="menu-odc-accounting-root" action="action-odc-accounting-open-periods" order="50"/>
 </object-views>
