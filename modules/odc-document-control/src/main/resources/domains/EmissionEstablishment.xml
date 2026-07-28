@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<domain-models xmlns="http://axelor.com/xml/ns/domain-models"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/domain-models https://axelor.com/xml/ns/domain-models/domain-models_8.0.xsd">
+  <module name="odc-document-control" package="com.odc.document.db"/>
+  <entity name="EmissionEstablishment" table="odc_emission_establishment"
+    extends="com.odc.organization.db.OdcAuditableModel">
+    <many-to-one name="branch" title="Branch" ref="com.odc.organization.db.Branch" required="true"/>
+    <string name="code" title="Code" required="true"/>
+    <string name="name" title="Name" required="true" namecolumn="true"/>
+    <string name="address" title="Address" large="true"/>
+    <boolean name="isDefault" title="Default" default="false"/>
+    <boolean name="active" title="Active" default="true"/>
+    <one-to-many name="pointsOfSale" title="Points of sale" ref="PointOfSale"
+      mappedBy="emissionEstablishment"/>
+  </entity>
+</domain-models>

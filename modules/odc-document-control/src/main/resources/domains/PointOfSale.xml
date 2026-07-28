@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<domain-models xmlns="http://axelor.com/xml/ns/domain-models"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/domain-models https://axelor.com/xml/ns/domain-models/domain-models_8.0.xsd">
+  <module name="odc-document-control" package="com.odc.document.db"/>
+  <entity name="PointOfSale" table="odc_point_of_sale">
+    <many-to-one name="emissionEstablishment" title="Emission establishment"
+      ref="EmissionEstablishment" required="true"/>
+    <string name="code" title="Code" required="true"/>
+    <string name="name" title="Name" required="true" namecolumn="true"/>
+    <string name="type" title="Type" selection="odc.document.point.type" required="true"/>
+    <boolean name="isDefault" title="Default" default="false"/>
+    <boolean name="active" title="Active" default="true"/>
+  </entity>
+</domain-models>

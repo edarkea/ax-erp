@@ -11,4 +11,5 @@ dependencies {
     api project(':modules:odc-organization')
     api project(':modules:odc-reference-data')
     api project(':modules:odc-catalog')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
 }

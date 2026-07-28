@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<domain-models xmlns="http://axelor.com/xml/ns/domain-models"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/domain-models https://axelor.com/xml/ns/domain-models/domain-models_8.0.xsd">
+  <module name="odc-document-control" package="com.odc.document.db"/>
+  <entity name="DocumentSeries" table="odc_document_series">
+    <many-to-one name="emissionEstablishment" title="Emission establishment"
+      ref="EmissionEstablishment" required="true"/>
+    <many-to-one name="pointOfSale" title="Point of sale" ref="PointOfSale" required="true"/>
+    <string name="documentType" title="Document type"
+      selection="odc.document.type" required="true"/>
+    <long name="currentSequence" title="Current sequence" default="0"/>
+    <integer name="paddingLength" title="Padding length" default="9"/>
+    <boolean name="isAutomatic" title="Automatic" default="true"/>
+    <string name="displayPattern" title="Display pattern" default="{EST}-{POS}-{SEQ}"/>
+    <boolean name="active" title="Active" default="true"/>
+  </entity>
+</domain-models>

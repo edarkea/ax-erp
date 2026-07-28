@@ -8,5 +8,6 @@ axelor {
 }
 
 dependencies {
+    api project(':modules:odc-common')
     api project(':modules:odc-organization')
 }

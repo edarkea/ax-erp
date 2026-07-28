@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/object-views https://axelor.com/xml/ns/object-views/object-views_8.0.xsd">
+  <selection name="odc.document.point.type">
+    <option value="PHYSICAL">Physical</option>
+    <option value="ELECTRONIC">Electronic</option>
+  </selection>
+  <selection name="odc.document.type">
+    <option value="SALES_INVOICE">Sales invoice</option>
+    <option value="CREDIT_NOTE">Credit note</option>
+    <option value="DEBIT_NOTE">Debit note</option>
+    <option value="OTHER">Other</option>
+  </selection>
+  <selection name="odc.document.reservation.status">
+    <option value="RESERVED">Reserved</option>
+    <option value="CONSUMED">Consumed</option>
+    <option value="VOID">Void</option>
+  </selection>
+
+  <grid name="emission-establishment-grid" title="Emission establishments"
+    model="com.odc.document.db.EmissionEstablishment">
+    <field name="branch"/><field name="code"/><field name="name"/>
+    <field name="isDefault"/><field name="active"/>
+  </grid>
+  <grid name="point-of-sale-grid" title="Points of sale"
+    model="com.odc.document.db.PointOfSale">
+    <field name="code"/><field name="name"/><field name="type"/>
+    <field name="isDefault"/><field name="active"/>
+  </grid>
+  <grid name="document-series-grid" title="Document series"
+    model="com.odc.document.db.DocumentSeries">
+    <field name="emissionEstablishment"/><field name="pointOfSale"/>
+    <field name="documentType"/><field name="currentSequence"/><field name="active"/>
+  </grid>
+  <grid name="user-point-assignment-grid" title="User point assignments"
+    model="com.odc.document.db.UserPointAssignment">
+    <field name="user"/><field name="pointOfSale"/><field name="isDefault"/><field name="active"/>
+  </grid>
+  <grid name="document-sequence-reservation-grid" title="Sequence reservations"
+    model="com.odc.document.db.DocumentSequenceReservation">
+    <field name="documentSeries"/><field name="documentModel"/><field name="documentId"/>
+    <field name="sequenceNumber"/><field name="documentNo"/><field name="status"/>
+    <field name="reservedBy"/><field name="reservedAt"/>
+  </grid>
+
+  <form name="point-of-sale-form" title="Point of sale"
+    model="com.odc.document.db.PointOfSale">
+    <panel><field name="emissionEstablishment" hidden="true"/><field name="code"/>
+      <field name="name"/><field name="type"/><field name="isDefault"/><field name="active"/></panel>
+  </form>
+  <form name="emission-establishment-form" title="Emission establishment"
+    model="com.odc.document.db.EmissionEstablishment">
+    <panel><field name="branch" domain="self.archived = false AND self.active = true"/>
+      <field name="code"/><field name="name"/><field name="address"/>
+      <field name="isDefault"/><field name="active"/></panel>
+    <panel title="Points of sale" showIf="id != null">
+      <field name="pointsOfSale" grid-view="point-of-sale-grid"
+        form-view="point-of-sale-form" domain="self.archived = false"/>
+    </panel>
+  </form>
+  <form name="document-series-form" title="Document series"
+    model="com.odc.document.db.DocumentSeries"
+    onNew="action-odc-document-configure-point-domain"
+    onLoad="action-odc-document-configure-point-domain">
+    <panel><field name="emissionEstablishment"
+        domain="self.archived = false AND self.active = true"
+        onChange="action-odc-document-configure-point-domain"/>
+      <field name="pointOfSale"
+        domain="self.id = 0"/>
+      <field name="documentType"/><field name="currentSequence" readonly="true"/>
+      <field name="paddingLength"/><field name="isAutomatic"/>
+      <field name="displayPattern"/><field name="active"/></panel>
+  </form>
+  <form name="user-point-assignment-form" title="User point assignment"
+    model="com.odc.document.db.UserPointAssignment">
+    <panel><field name="user"/><field name="pointOfSale"
+        domain="self.archived = false AND self.active = true"/>
+      <field name="isDefault"/><field name="active"/></panel>
+  </form>
+  <form name="document-sequence-reservation-form" title="Sequence reservation"
+    model="com.odc.document.db.DocumentSequenceReservation">
+    <panel><field name="documentSeries" readonly="true"/>
+      <field name="documentModel" readonly="true"/><field name="documentId" readonly="true"/>
+      <field name="correlationKey" readonly="true"/><field name="sequenceNumber" readonly="true"/>
+      <field name="documentNo" readonly="true"/><field name="status" readonly="true"/>
+      <field name="reservedBy" readonly="true"/><field name="reservedAt" readonly="true"/>
+      <field name="consumedAt" readonly="true"/><field name="voidedAt" readonly="true"/>
+      <field name="voidReason" readonlyIf="status != 'RESERVED'"/>
+      <button name="voidBtn" title="Void" onClick="action-odc-document-void-reservation"
+        showIf="status == 'RESERVED'"/></panel>
+  </form>
+  <action-method name="action-odc-document-void-reservation">
+    <call class="com.odc.document.web.DocumentSequenceController" method="voidReservation"/>
+  </action-method>
+  <action-method name="action-odc-document-configure-point-domain">
+    <call class="com.odc.document.web.DocumentSequenceController" method="configurePointDomain"/>
+  </action-method>
+
+  <action-view name="action-emission-establishment-view" title="Emission establishments"
+    model="com.odc.document.db.EmissionEstablishment">
+    <view type="grid" name="emission-establishment-grid"/>
+    <view type="form" name="emission-establishment-form"/>
+    <domain>self.archived = false</domain>
+  </action-view>
+  <action-view name="action-document-series-view" title="Document series"
+    model="com.odc.document.db.DocumentSeries">
+    <view type="grid" name="document-series-grid"/><view type="form" name="document-series-form"/>
+    <domain>self.archived = false</domain>
+  </action-view>
+  <action-view name="action-user-point-assignment-view" title="User point assignments"
+    model="com.odc.document.db.UserPointAssignment">
+    <view type="grid" name="user-point-assignment-grid"/>
+    <view type="form" name="user-point-assignment-form"/><domain>self.archived = false</domain>
+  </action-view>
+  <action-view name="action-document-sequence-reservation-view" title="Sequence reservations"
+    model="com.odc.document.db.DocumentSequenceReservation">
+    <view type="grid" name="document-sequence-reservation-grid"/>
+    <view type="form" name="document-sequence-reservation-form"/>
+  </action-view>
+  <menuitem name="menu-odc-document-root" title="Document control" order="600"/>
+  <menuitem name="menu-odc-emission-establishment" title="Emission establishments"
+    parent="menu-odc-document-root" action="action-emission-establishment-view" order="10"/>
+  <menuitem name="menu-odc-document-series" title="Document series"
+    parent="menu-odc-document-root" action="action-document-series-view" order="20"/>
+  <menuitem name="menu-odc-user-point-assignment" title="User point assignments"
+    parent="menu-odc-document-root" action="action-user-point-assignment-view" order="30"/>
+  <menuitem name="menu-odc-sequence-reservation" title="Sequence reservations"
+    parent="menu-odc-document-root" action="action-document-sequence-reservation-view" order="40"/>
+</object-views>

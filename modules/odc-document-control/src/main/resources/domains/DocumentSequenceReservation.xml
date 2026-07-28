@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<domain-models xmlns="http://axelor.com/xml/ns/domain-models"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/domain-models https://axelor.com/xml/ns/domain-models/domain-models_8.0.xsd">
+  <module name="odc-document-control" package="com.odc.document.db"/>
+  <entity name="DocumentSequenceReservation" table="odc_document_sequence_reservation">
+    <many-to-one name="documentSeries" title="Document series" ref="DocumentSeries" required="true"/>
+    <string name="documentModel" title="Document model" required="true"/>
+    <long name="documentId" title="Document ID"/>
+    <string name="correlationKey" title="Correlation key"/>
+    <long name="sequenceNumber" title="Sequence number" required="true"/>
+    <string name="documentNo" title="Document number" required="true" namecolumn="true"/>
+    <string name="status" title="Status" selection="odc.document.reservation.status"
+      default="RESERVED" required="true"/>
+    <many-to-one name="reservedBy" title="Reserved by" ref="com.axelor.auth.db.User" required="true"/>
+    <datetime name="reservedAt" title="Reserved at" required="true"/>
+    <datetime name="consumedAt" title="Consumed at"/>
+    <datetime name="voidedAt" title="Voided at"/>
+    <string name="voidReason" title="Void reason" large="true"/>
+  </entity>
+</domain-models>

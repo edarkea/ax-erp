@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/object-views https://axelor.com/xml/ns/object-views/object-views_8.0.xsd">
+
+  <grid name="price-list-grid" title="Price lists" model="com.odc.pricing.db.PriceList">
+    <field name="company"/>
+    <field name="name"/>
+    <field name="currency"/>
+    <field name="validFrom"/>
+    <field name="validUntil"/>
+    <field name="priority"/>
+    <field name="active"/>
+    <field name="archived"/>
+  </grid>
+
+  <grid name="price-list-item-grid" title="Prices"
+    model="com.odc.pricing.db.PriceListItem">
+    <field name="item.sku" title="SKU"/>
+    <field name="item.name" title="Item"/>
+    <field name="price"/>
+    <field name="minimumQuantity"/>
+    <field name="maximumQuantity"/>
+    <field name="validFrom"/>
+    <field name="validUntil"/>
+    <field name="active"/>
+    <field name="archived"/>
+  </grid>
+
+  <form name="price-list-item-form" title="Price"
+    model="com.odc.pricing.db.PriceListItem"
+    onNew="action-odc-pricing-item-domain"
+    onLoad="action-odc-pricing-item-domain">
+    <panel name="mainPanel">
+      <field name="priceList" hidden="true"/>
+      <field name="item" form-view="item-form" grid-view="item-grid"
+        domain="self.archived = false AND self.active = true"/>
+      <field name="price"/>
+      <field name="minimumQuantity"/>
+      <field name="maximumQuantity"/>
+      <field name="validFrom"/>
+      <field name="validUntil"/>
+      <field name="active"/>
+    </panel>
+  </form>
+
+  <form name="price-list-form" title="Price list" model="com.odc.pricing.db.PriceList"
+    onNew="action-odc-pricing-load-active-company">
+    <panel name="generalPanel" title="General information">
+      <field name="company" readonly="true"/>
+      <field name="name"/>
+      <field name="currency" form-view="currency-form" grid-view="currency-grid"
+        domain="self.archived = false"/>
+      <field name="validFrom"/>
+      <field name="validUntil"/>
+      <field name="priority"/>
+      <field name="pricesIncludeTax"/>
+      <field name="active"/>
+    </panel>
+    <panel name="pricesPanel" title="Prices" showIf="id != null">
+      <field name="priceListItems" grid-view="price-list-item-grid"
+        form-view="price-list-item-form" domain="self.archived = false"/>
+    </panel>
+    <panel name="auditPanel" title="Audit" showIf="id != null" collapse="true">
+      <field name="createdBy" readonly="true"/>
+      <field name="createdOn" readonly="true"/>
+      <field name="updatedBy" readonly="true"/>
+      <field name="updatedOn" readonly="true"/>
+    </panel>
+  </form>
+
+  <action-method name="action-odc-pricing-load-active-company">
+    <call class="com.odc.organization.web.ActiveOrganizationController" method="loadCompany"/>
+  </action-method>
+
+  <action-method name="action-odc-pricing-item-domain">
+    <call class="com.odc.pricing.web.PricingController" method="configureItemDomain"/>
+  </action-method>
+
+  <action-view name="action-price-list-view" title="Price lists"
+    model="com.odc.pricing.db.PriceList">
+    <view type="grid" name="price-list-grid"/>
+    <view type="form" name="price-list-form"/>
+    <domain>self.archived = false</domain>
+  </action-view>
+
+  <menuitem name="menu-odc-pricing-root" title="Pricing" order="500"/>
+  <menuitem name="menu-odc-price-lists" title="Price lists"
+    parent="menu-odc-pricing-root" action="action-price-list-view" order="10"/>
+
+</object-views>

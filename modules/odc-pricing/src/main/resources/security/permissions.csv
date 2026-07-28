@@ -1,0 +1,8 @@
+"name","object","canRead","canWrite","canCreate","canRemove","condition"
+"odc.pricing.price-list.read","com.odc.pricing.db.PriceList","true","false","false","false",""
+"odc.pricing.price-list.write","com.odc.pricing.db.PriceList","true","true","true","false",""
+"odc.pricing.price-list.archive","com.odc.pricing.db.PriceList","true","true","false","false",""
+"odc.pricing.price-list-item.read","com.odc.pricing.db.PriceListItem","true","false","false","false",""
+"odc.pricing.price-list-item.manage","com.odc.pricing.db.PriceListItem","true","true","true","false",""
+"odc.pricing.price-list-item.archive","com.odc.pricing.db.PriceListItem","true","true","false","false",""
+"odc.pricing.resolve","com.odc.pricing.db.PriceListItem","true","false","false","false",""

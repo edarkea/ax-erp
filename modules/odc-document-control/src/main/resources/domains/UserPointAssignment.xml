@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<domain-models xmlns="http://axelor.com/xml/ns/domain-models"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/domain-models https://axelor.com/xml/ns/domain-models/domain-models_8.0.xsd">
+  <module name="odc-document-control" package="com.odc.document.db"/>
+  <entity name="UserPointAssignment" table="odc_user_point_assignment">
+    <many-to-one name="user" title="User" ref="com.axelor.auth.db.User"
+      column="user_id" required="true"/>
+    <many-to-one name="pointOfSale" title="Point of sale" ref="PointOfSale" required="true"/>
+    <boolean name="isDefault" title="Default" default="false"/>
+    <boolean name="active" title="Active" default="true"/>
+  </entity>
+</domain-models>

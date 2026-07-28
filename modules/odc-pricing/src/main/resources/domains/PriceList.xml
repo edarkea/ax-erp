@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<domain-models xmlns="http://axelor.com/xml/ns/domain-models"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/domain-models https://axelor.com/xml/ns/domain-models/domain-models_8.0.xsd">
+
+  <module name="odc-pricing" package="com.odc.pricing.db"/>
+
+  <entity name="PriceList" table="odc_price_list"
+    extends="com.odc.organization.db.OdcAuditableModel">
+    <many-to-one name="company" title="Company"
+      ref="com.odc.organization.db.Company" required="true"/>
+    <string name="name" title="Name" required="true" namecolumn="true"/>
+    <many-to-one name="currency" title="Currency"
+      ref="com.odc.reference.db.Currency" required="true"/>
+    <date name="validFrom" title="Valid from"/>
+    <date name="validUntil" title="Valid until"/>
+    <integer name="priority" title="Priority" default="100"/>
+    <boolean name="pricesIncludeTax" title="Prices include tax" default="false"/>
+    <boolean name="active" title="Active" default="true"/>
+    <one-to-many name="priceListItems" title="Prices"
+      ref="PriceListItem" mappedBy="priceList"/>
+  </entity>
+
+</domain-models>

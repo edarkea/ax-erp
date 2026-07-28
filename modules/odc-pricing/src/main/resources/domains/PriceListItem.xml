@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<domain-models xmlns="http://axelor.com/xml/ns/domain-models"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/domain-models https://axelor.com/xml/ns/domain-models/domain-models_8.0.xsd">
+
+  <module name="odc-pricing" package="com.odc.pricing.db"/>
+
+  <entity name="PriceListItem" table="odc_price_list_item">
+    <many-to-one name="priceList" title="Price list" ref="PriceList" required="true"/>
+    <many-to-one name="item" title="Item"
+      ref="com.odc.catalog.db.Item" required="true"/>
+    <decimal name="price" title="Price" required="true" precision="10" scale="4"/>
+    <decimal name="minimumQuantity" title="Minimum quantity" precision="10" scale="4"/>
+    <decimal name="maximumQuantity" title="Maximum quantity" precision="10" scale="4"/>
+    <date name="validFrom" title="Valid from"/>
+    <date name="validUntil" title="Valid until"/>
+    <boolean name="active" title="Active" default="true"/>
+  </entity>
+
+</domain-models>
