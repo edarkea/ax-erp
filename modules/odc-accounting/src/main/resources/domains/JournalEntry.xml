@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<domain-models xmlns="http://axelor.com/xml/ns/domain-models"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/domain-models https://axelor.com/xml/ns/domain-models/domain-models_8.0.xsd">
+  <module name="odc-accounting" package="com.odc.accounting.db"/>
+  <entity name="JournalEntry" table="odc_journal_entry"
+    extends="com.odc.organization.db.OdcAuditableModel">
+    <many-to-one name="company" title="Company" ref="com.odc.organization.db.Company" required="true"/>
+    <many-to-one name="branch" title="Branch" ref="com.odc.organization.db.Branch"/>
+    <many-to-one name="accountingPeriod" title="Accounting period" ref="AccountingPeriod" required="true"/>
+    <string name="entryNumber" title="Entry number"/>
+    <string name="entryType" title="Entry type" selection="odc.accounting.entry.type" required="true"/>
+    <string name="status" title="Status" selection="odc.accounting.entry.status"
+      default="DRAFT" required="true"/>
+    <date name="accountingDate" title="Accounting date" required="true"/>
+    <date name="documentDate" title="Document date"/>
+    <many-to-one name="currency" title="Currency" ref="com.odc.reference.db.Currency" required="true"/>
+    <decimal name="exchangeRate" title="Exchange rate" precision="18" scale="8"
+      default="1" required="true"/>
+    <many-to-one name="party" title="Party" ref="com.odc.party.db.Party"/>
+    <string name="reference" title="Reference"/>
+    <string name="description" title="Description" large="true" required="true"/>
+    <string name="sourceModule" title="Source module"/>
+    <string name="sourceModel" title="Source model"/>
+    <long name="sourceId" title="Source identifier"/>
+    <string name="sourceReference" title="Source reference"/>
+    <integer name="postingYear" title="Posting year"/>
+    <long name="postingSequence" title="Posting sequence"/>
+    <datetime name="postedAt" title="Posted at"/>
+    <many-to-one name="postedBy" title="Posted by" ref="com.axelor.auth.db.User"/>
+    <many-to-one name="reversalOf" title="Reversal of" ref="JournalEntry"/>
+    <string name="reversalReason" title="Reversal reason" large="true"/>
+    <datetime name="reversedAt" title="Reversed at"/>
+    <many-to-one name="reversedBy" title="Reversed by" ref="com.axelor.auth.db.User"/>
+    <datetime name="cancelledAt" title="Cancelled at"/>
+    <string name="cancelReason" title="Cancellation reason" large="true"/>
+    <one-to-many name="journalLines" title="Journal lines" ref="JournalLine"
+      mappedBy="journalEntry" orderBy="sequence"/>
+  </entity>
+</domain-models>

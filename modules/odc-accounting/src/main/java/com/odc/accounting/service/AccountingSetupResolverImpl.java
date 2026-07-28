@@ -71,6 +71,14 @@ public class AccountingSetupResolverImpl implements AccountingSetupResolver {
 
   @Override
   public AccountingSetupResolution requireAccount(
+      AccountingPostingContext context, AccountingRoleDefinition role) {
+    if (context == null) throw error("Accounting posting context is required.");
+    return requireAccount(context.company(), context.branch(), context.currency(),
+        context.documentGroup(), context.documentType(), role);
+  }
+
+  @Override
+  public AccountingSetupResolution requireAccount(
       Branch branch, Currency currency, String group,
       String type, AccountingRoleDefinition role) {
     return requireAccount(activeOrganizationService.requireActiveCompany(),

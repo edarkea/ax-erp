@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/object-views https://axelor.com/xml/ns/object-views/object-views_8.0.xsd">
+  <selection name="odc.accounting.entry.type">
+    <option value="GENERAL">General</option><option value="ADJUSTMENT">Adjustment</option>
+    <option value="OPENING">Opening</option><option value="CLOSING">Closing</option>
+    <option value="SALES">Sales</option><option value="PURCHASE">Purchase</option>
+    <option value="CASH">Cash</option><option value="BANK">Bank</option>
+  </selection>
+  <selection name="odc.accounting.entry.status">
+    <option value="DRAFT">Draft</option><option value="POSTED">Posted</option>
+    <option value="REVERSED">Reversed</option><option value="CANCELLED">Cancelled</option>
+  </selection>
+  <grid name="journal-entry-grid" title="Journal entries"
+    model="com.odc.accounting.db.JournalEntry">
+    <field name="accountingDate"/><field name="entryNumber"/><field name="entryType"/>
+    <field name="description"/><field name="accountingPeriod"/><field name="currency"/>
+    <field name="party"/><field name="status"/><field name="archived"/>
+    <field name="postedAt"/><field name="reversedAt"/>
+  </grid>
+  <form name="journal-entry-form" title="Journal entry"
+    model="com.odc.accounting.db.JournalEntry"
+    onNew="action-odc-accounting-load-company,action-odc-accounting-journal-domains"
+    onLoad="action-odc-accounting-journal-domains">
+    <panel title="Header">
+      <field name="company" readonly="true"/>
+      <field name="branch" readonlyIf="status != 'DRAFT' || archived"/>
+      <field name="entryNumber" readonly="true"/>
+      <field name="entryType" readonlyIf="status != 'DRAFT' || archived"/>
+      <field name="status" readonly="true"/>
+      <field name="accountingDate" readonlyIf="status != 'DRAFT' || archived"
+        onChange="action-odc-accounting-journal-resolve-period"/>
+      <field name="documentDate" readonlyIf="status != 'DRAFT' || archived"/>
+      <field name="accountingPeriod" readonly="true"/>
+      <field name="currency" domain="self.archived = false"
+        readonlyIf="status != 'DRAFT' || archived"/>
+      <field name="exchangeRate" readonlyIf="status != 'DRAFT' || archived"/>
+      <field name="party" readonlyIf="status != 'DRAFT' || archived"/>
+      <field name="reference" readonlyIf="status != 'DRAFT' || archived"/>
+      <field name="description" readonlyIf="status != 'DRAFT' || archived"/>
+    </panel>
+    <panel-related name="journalLinesPanel" title="Journal lines"
+      field="journalLines" form-view="journal-line-form" grid-view="journal-line-grid"
+      readonlyIf="status != 'DRAFT' || archived"/>
+    <panel title="Totals">
+      <field name="$totalDebit" title="Total debit" readonly="true"/>
+      <field name="$totalCredit" title="Total credit" readonly="true"/>
+      <field name="$difference" title="Difference" readonly="true"/>
+      <field name="$lineCount" title="Line count" readonly="true"/>
+      <field name="$balanced" title="Balanced" readonly="true"/>
+      <button name="validateBalance" title="Validate balance"
+        onClick="action-odc-accounting-journal-balance"/>
+      <button name="validateReady" title="Validate readiness"
+        showIf="id != null &amp;&amp; status == 'DRAFT' &amp;&amp; !archived"
+        onClick="action-odc-accounting-journal-ready"/>
+      <button name="postJournal" title="Post"
+        showIf="id != null &amp;&amp; status == 'DRAFT' &amp;&amp; !archived"
+        onClick="action-odc-accounting-journal-post"/>
+    </panel>
+    <panel title="Source" collapse="true">
+      <field name="sourceModule" readonlyIf="status != 'DRAFT' || archived"/>
+      <field name="sourceModel" readonlyIf="status != 'DRAFT' || archived"/>
+      <field name="sourceId" readonlyIf="status != 'DRAFT' || archived"/>
+      <field name="sourceReference" readonlyIf="status != 'DRAFT' || archived"/>
+    </panel>
+    <panel title="Cancellation" showIf="status == 'DRAFT' || status == 'CANCELLED'">
+      <field name="cancelReason" readonlyIf="status != 'DRAFT' || archived"/>
+      <field name="cancelledAt" readonly="true"/>
+      <button name="cancelJournalEntry" title="Cancel"
+        showIf="id != null &amp;&amp; status == 'DRAFT' &amp;&amp; !archived"
+        onClick="action-odc-accounting-journal-cancel"/>
+    </panel>
+    <panel title="Posting" showIf="status == 'POSTED' || status == 'REVERSED'">
+      <field name="postingYear" readonly="true"/><field name="postingSequence" readonly="true"/>
+      <field name="postedAt" readonly="true"/><field name="postedBy" readonly="true"/>
+    </panel>
+    <panel title="Reversal" showIf="status == 'POSTED' || status == 'REVERSED' || reversalOf != null">
+      <field name="reversalOf" readonly="true"/><field name="reversalReason" readonly="true"/>
+      <field name="reversedAt" readonly="true"/><field name="reversedBy" readonly="true"/>
+      <field name="$reversalDate" title="Reversal date" showIf="status == 'POSTED'"/>
+      <field name="$reversalReasonInput" title="Reversal reason" showIf="status == 'POSTED'"/>
+      <button name="reverseJournal" title="Reverse" showIf="status == 'POSTED'"
+        onClick="action-odc-accounting-journal-reverse"/>
+    </panel>
+    <panel title="Actions">
+      <button name="archiveJournalEntry" title="Archive"
+        showIf="id != null &amp;&amp; status == 'DRAFT' &amp;&amp; !archived"
+        onClick="action-odc-accounting-journal-archive"/>
+      <button name="restoreJournalEntry" title="Restore"
+        showIf="id != null &amp;&amp; status == 'DRAFT' &amp;&amp; archived"
+        onClick="action-odc-accounting-journal-restore"/>
+    </panel>
+    <panel title="Audit" showIf="id != null" collapse="true">
+      <field name="createdBy" readonly="true"/><field name="createdOn" readonly="true"/>
+      <field name="updatedBy" readonly="true"/><field name="updatedOn" readonly="true"/>
+    </panel>
+  </form>
+  <grid name="journal-line-grid" title="Journal lines"
+    model="com.odc.accounting.db.JournalLine" orderBy="sequence">
+    <field name="sequence"/><field name="account"/><field name="accountingRoleDefinition"/>
+    <field name="party"/><field name="description"/><field name="reference"/>
+    <field name="debit"/><field name="credit"/><field name="dueDate"/><field name="archived"/>
+  </grid>
+  <form name="journal-line-form" title="Journal line"
+    model="com.odc.accounting.db.JournalLine">
+    <panel title="Line">
+      <field name="journalEntry" hidden="true"/><field name="sequence"/>
+      <field name="account"/><field name="accountingRoleDefinition"/>
+      <field name="accountingSetupEntry"/><field name="party"/>
+      <field name="description"/><field name="reference"/>
+      <field name="debit"/><field name="credit"/><field name="dueDate"/>
+    </panel>
+  </form>
+  <action-method name="action-odc-accounting-journal-domains">
+    <call class="com.odc.accounting.web.AccountingController" method="configureJournalDomains"/>
+  </action-method>
+  <action-method name="action-odc-accounting-journal-resolve-period">
+    <call class="com.odc.accounting.web.AccountingController" method="resolveJournalPeriod"/>
+  </action-method>
+  <action-method name="action-odc-accounting-journal-cancel">
+    <call class="com.odc.accounting.web.AccountingController" method="cancelJournalEntry"/>
+  </action-method>
+  <action-method name="action-odc-accounting-journal-archive">
+    <call class="com.odc.accounting.web.AccountingController" method="archiveJournalEntry"/>
+  </action-method>
+  <action-method name="action-odc-accounting-journal-restore">
+    <call class="com.odc.accounting.web.AccountingController" method="restoreJournalEntry"/>
+  </action-method>
+  <action-method name="action-odc-accounting-journal-balance">
+    <call class="com.odc.accounting.web.AccountingController" method="validateJournalBalance"/>
+  </action-method>
+  <action-method name="action-odc-accounting-journal-ready">
+    <call class="com.odc.accounting.web.AccountingController" method="validateJournalReady"/>
+  </action-method>
+  <action-method name="action-odc-accounting-journal-post">
+    <call class="com.odc.accounting.web.AccountingController" method="postJournalEntry"/>
+  </action-method>
+  <action-method name="action-odc-accounting-journal-reverse">
+    <call class="com.odc.accounting.web.AccountingController" method="reverseJournalEntry"/>
+  </action-method>
+  <action-method name="action-odc-accounting-open-journal-entries">
+    <call class="com.odc.accounting.web.AccountingController" method="openJournalEntries"/>
+  </action-method>
+  <menuitem name="menu-odc-journal-entry" title="Journal entries"
+    parent="menu-odc-accounting-root" action="action-odc-accounting-open-journal-entries" order="60"/>
+</object-views>

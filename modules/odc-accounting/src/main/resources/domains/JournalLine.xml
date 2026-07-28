@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<domain-models xmlns="http://axelor.com/xml/ns/domain-models"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/domain-models https://axelor.com/xml/ns/domain-models/domain-models_8.0.xsd">
+  <module name="odc-accounting" package="com.odc.accounting.db"/>
+  <entity name="JournalLine" table="odc_journal_line"
+    extends="com.odc.organization.db.OdcAuditableModel">
+    <many-to-one name="journalEntry" title="Journal entry" ref="JournalEntry" required="true"/>
+    <integer name="sequence" title="Sequence" required="true"/>
+    <many-to-one name="account" title="Account" ref="ChartAccount" required="true"/>
+    <many-to-one name="accountingRoleDefinition" title="Accounting role"
+      ref="AccountingRoleDefinition"/>
+    <many-to-one name="accountingSetupEntry" title="Accounting setup"
+      ref="AccountingSetupEntry"/>
+    <many-to-one name="party" title="Party" ref="com.odc.party.db.Party"/>
+    <string name="description" title="Description"/>
+    <string name="reference" title="Reference"/>
+    <decimal name="debit" title="Debit" precision="18" scale="4" default="0" required="true"/>
+    <decimal name="credit" title="Credit" precision="18" scale="4" default="0" required="true"/>
+    <date name="dueDate" title="Due date"/>
+  </entity>
+</domain-models>

@@ -16,4 +16,6 @@ public interface AccountingSetupResolver {
   AccountingSetupResolution requireAccount(
       Branch branch, Currency currency, String documentGroup,
       String documentType, AccountingRoleDefinition roleDefinition);
+  AccountingSetupResolution requireAccount(
+      AccountingPostingContext context, AccountingRoleDefinition roleDefinition);
 }
