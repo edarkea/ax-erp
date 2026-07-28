@@ -9,7 +9,5 @@ public interface OrganizationContextStore {
   Optional<Long> getBranchId();
   void setBranchId(Long branchId);
   void clearBranchId();
-  Optional<OrganizationContextStatus> getStatus();
-  void setStatus(OrganizationContextStatus status);
   void clear();
 }

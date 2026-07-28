@@ -145,8 +145,6 @@ Agregar `company` solo cuando el modelo sea una **raíz de agregado cuyo conteni
 
 - `Branch`
 - `UserCompanyAccess`
-- `ApiAuditLog`, opcional
-- `BulkOperationJob`, opcional
 - `Party`
 - `PartyTag`
 - `ItemCategory`
@@ -184,7 +182,6 @@ Agregar `company` solo cuando el modelo sea una **raíz de agregado cuyo conteni
 - `TaxCategory`
 - `TaxRate`
 - `AccountingRoleDefinition`
-- `JobExecution`
 
 Nunca agregues `company` a una entidad hija solo para simplificar una consulta. Usa joins, consultas específicas o campos derivados.
 
@@ -196,26 +193,25 @@ Nunca agregues `company` a una entidad hija solo para simplificar una consulta. 
 odc-reference-data
         ↓
 odc-organization
-        ├──────────────┬──────────────┬──────────────┐
-        ↓              ↓              ↓              ↓
-odc-operations      odc-party   odc-document-control odc-accounting
-        │              │                              ↑
-        │              └──────────────┐               │
-        ↓                             ↓               │
-odc-tax ───────────────────────→ odc-catalog          │
-        │                             ↓               │
-        └──────────────────────→ odc-pricing          │
-                                      ↓               │
-                               odc-sales ──────────────┘
-                                      ↓
-                           odc-sales-accounting
+        ├──────────────┬──────────────┐
+        ↓              ↓              ↓
+     odc-party   odc-document-control odc-accounting
+        │                              ↑
+        └──────────────┐               │
+                       ↓               │
+odc-tax ─────────→ odc-catalog         │
+   │                   ↓               │
+   └──────────────→ odc-pricing        │
+                       ↓               │
+                    odc-sales ──────────┘
+                       ↓
+              odc-sales-accounting
 ```
 
 Dependencias concretas:
 
 - `odc-reference-data`: plataforma.
 - `odc-organization`: `odc-reference-data`.
-- `odc-operations`: `odc-organization`.
 - `odc-tax`: `odc-reference-data`.
 - `odc-party`: `odc-organization`, `odc-reference-data`.
 - `odc-catalog`: `odc-organization`, `odc-tax`.
@@ -242,7 +238,6 @@ Si una modificación requiere invertir una dependencia, detente y usa:
 ```text
 com.odc.reference
 com.odc.organization
-com.odc.operations
 com.odc.tax
 com.odc.party
 com.odc.catalog
@@ -349,7 +344,6 @@ Para cada tarea, lee solo el archivo necesario:
 - `docs/architecture/00-roadmap.md`
 - `docs/architecture/01-reference-data.md`
 - `docs/architecture/02-organization.md`
-- `docs/architecture/03-operations.md`
 - `docs/architecture/04-tax.md`
 - `docs/architecture/05-party.md`
 - `docs/architecture/06-catalog.md`

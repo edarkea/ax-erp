@@ -13,7 +13,6 @@
             <option value="$PROJECT_DIR$/modules/odc-catalog" />
             <option value="$PROJECT_DIR$/modules/odc-common" />
             <option value="$PROJECT_DIR$/modules/odc-document-control" />
-            <option value="$PROJECT_DIR$/modules/odc-operations" />
             <option value="$PROJECT_DIR$/modules/odc-organization" />
             <option value="$PROJECT_DIR$/modules/odc-party" />
             <option value="$PROJECT_DIR$/modules/odc-pricing" />

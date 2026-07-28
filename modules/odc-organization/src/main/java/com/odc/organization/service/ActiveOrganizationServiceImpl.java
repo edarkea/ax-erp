@@ -6,8 +6,6 @@ import com.google.inject.Inject;
 import com.odc.organization.context.ActiveOrganizationContext;
 import com.odc.organization.context.CurrentUserProvider;
 import com.odc.organization.context.OrganizationContextStore;
-import com.odc.organization.context.OrganizationContextResolution;
-import com.odc.organization.context.OrganizationContextStatus;
 import com.odc.organization.db.Branch;
 import com.odc.organization.db.Company;
 import com.odc.organization.db.UserBranchAccess;
@@ -184,59 +182,6 @@ public class ActiveOrganizationServiceImpl implements ActiveOrganizationService 
     return accessService.findAccessibleBranches(user, company);
   }
 
-  @Override
-  public OrganizationContextResolution initializeContextAfterLogin(User user) {
-    store.clear();
-    List<Company> available = accessService.findAccessibleCompanies(user);
-    if (available.isEmpty()) {
-      return resolution(OrganizationContextStatus.NO_COMPANY_ACCESS, null, null);
-    }
-    List<Company> defaults = findDefaultCompanies(user);
-    if (defaults.size() > 1) throw error("Multiple default companies exist for the user.");
-    Company company = defaults.size() == 1 ? defaults.get(0) : available.size() == 1 ? available.get(0) : null;
-    if (company == null) {
-      return resolution(OrganizationContextStatus.COMPANY_SELECTION_REQUIRED, null, null);
-    }
-    store.setCompanyId(company.getId());
-    List<Branch> defaultBranches = findDefaultBranches(user, company);
-    if (defaultBranches.size() > 1) throw error("Multiple default branches exist for the company.");
-    List<Branch> branches = accessService.findAccessibleBranches(user, company);
-    Branch branch =
-        defaultBranches.size() == 1
-            ? defaultBranches.get(0)
-            : branches.size() == 1 ? branches.get(0) : null;
-    if (branch != null) store.setBranchId(branch.getId());
-    return resolution(
-        branch == null
-            ? OrganizationContextStatus.COMPANY_RESOLVED
-            : OrganizationContextStatus.COMPANY_AND_BRANCH_RESOLVED,
-        company,
-        branch);
-  }
-
-  @Override
-  public OrganizationContextResolution refreshContext() {
-    return initializeContextAfterLogin(requireUser());
-  }
-
-  @Override
-  public OrganizationContextStatus getContextStatus() {
-    return store.getStatus().orElseGet(
-        () -> initializeContextAfterLogin(requireUser()).status());
-  }
-
-  @Override
-  public boolean hasOrganizationContext() {
-    OrganizationContextStatus status = getContextStatus();
-    return status == OrganizationContextStatus.COMPANY_RESOLVED
-        || status == OrganizationContextStatus.COMPANY_AND_BRANCH_RESOLVED;
-  }
-
-  @Override
-  public boolean requiresCompanySelection() {
-    return getContextStatus() == OrganizationContextStatus.COMPANY_SELECTION_REQUIRED;
-  }
-
   protected Company findCompany(Long id) { return companyRepository.find(id); }
   protected Branch findBranch(Long id) { return branchRepository.find(id); }
   protected List<Company> findDefaultCompanies(User user) {
@@ -269,10 +214,5 @@ public class ActiveOrganizationServiceImpl implements ActiveOrganizationService 
   private Long id(Company company) { return company == null ? null : company.getId(); }
   private IllegalArgumentException error(String message) {
     return new IllegalArgumentException(I18n.get(message));
-  }
-  private OrganizationContextResolution resolution(
-      OrganizationContextStatus status, Company company, Branch branch) {
-    store.setStatus(status);
-    return new OrganizationContextResolution(status, company, branch);
   }
 }

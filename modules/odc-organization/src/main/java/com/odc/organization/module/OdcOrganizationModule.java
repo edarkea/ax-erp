@@ -3,7 +3,6 @@ package com.odc.organization.module;
 import com.axelor.app.AxelorModule;
 import com.odc.organization.observer.OrganizationSaveObserver;
 import com.odc.organization.observer.OrganizationAccessSaveObserver;
-import com.odc.organization.observer.OrganizationLoginObserver;
 import com.odc.organization.service.AccessValidationService;
 import com.odc.organization.service.BranchService;
 import com.odc.organization.service.BranchServiceImpl;
@@ -43,6 +42,5 @@ public class OdcOrganizationModule extends AxelorModule {
     bind(ActiveOrganizationService.class).to(ActiveOrganizationServiceImpl.class);
     bind(OrganizationSaveObserver.class);
     bind(OrganizationAccessSaveObserver.class);
-    bind(OrganizationLoginObserver.class);
   }
 }
