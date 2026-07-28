@@ -52,7 +52,8 @@ public class JournalReversalServiceImpl implements JournalReversalService {
     reversal.setReference(original.getEntryNumber());
     reversal.setDescription("Reversal of entry " + original.getEntryNumber() + ": " + original.getDescription());
     reversal.setSourceModule(original.getSourceModule()); reversal.setSourceModel(original.getSourceModel());
-    reversal.setSourceId(original.getSourceId()); reversal.setSourceReference(original.getSourceReference());
+    reversal.setSourceRecordId(original.getSourceRecordId());
+    reversal.setSourceDocumentNo(original.getSourceDocumentNo());
     reversal.setReversalOf(original); reversal.setReversalReason(normalized);
     reversal = entryService.save(reversal);
     for (JournalLine source : lineService.findActiveLines(original)) {

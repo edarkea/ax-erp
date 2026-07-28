@@ -8,4 +8,7 @@ public interface AccountingRoleDefinitionService {
   void archive(AccountingRoleDefinition definition);
   AccountingRoleDefinition restore(AccountingRoleDefinition definition);
   void requireUsable(AccountingRoleDefinition definition);
+  default AccountingRoleDefinition requireByCode(String code) {
+    throw new UnsupportedOperationException("Accounting role lookup is not implemented.");
+  }
 }

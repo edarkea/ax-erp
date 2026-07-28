@@ -116,7 +116,7 @@ class JournalEntryServiceImplTest {
   @Test
   void findsAtMostOneSourcePerCompany() {
     JournalEntry value = service.save(valid());
-    value.setSourceModel("Invoice"); value.setSourceId(5L);
+    value.setSourceModel("Invoice"); value.setSourceRecordId(5L);
     assertSame(value, service.findBySource(company, " Invoice ", 5L).orElseThrow());
     assertTrue(service.findBySource(company, "Invoice", 6L).isEmpty());
     service.values.add(copy(value));
@@ -146,7 +146,7 @@ class JournalEntryServiceImplTest {
     value.setAccountingDate(source.getAccountingDate()); value.setDocumentDate(source.getDocumentDate());
     value.setCurrency(source.getCurrency()); value.setExchangeRate(source.getExchangeRate());
     value.setParty(source.getParty()); value.setDescription(source.getDescription());
-    value.setSourceModel(source.getSourceModel()); value.setSourceId(source.getSourceId());
+    value.setSourceModel(source.getSourceModel()); value.setSourceRecordId(source.getSourceRecordId());
     value.setArchived(source.getArchived()); return value;
   }
 
@@ -166,7 +166,7 @@ class JournalEntryServiceImplTest {
     @Override protected List<JournalEntry> findSourceEntries(
         Company company, String model, Long sourceId) {
       return values.stream().filter(value -> value.getCompany().getId().equals(company.getId())
-          && model.equals(value.getSourceModel()) && sourceId.equals(value.getSourceId())).toList();
+          && model.equals(value.getSourceModel()) && sourceId.equals(value.getSourceRecordId())).toList();
     }
   }
 

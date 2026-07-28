@@ -1,0 +1,6 @@
+"name","object","canRead","canWrite","canCreate","canRemove","condition"
+"odc.sales-accounting.invoice.read","com.odc.sales.db.SalesInvoice","true","false","false","false",""
+"odc.sales-accounting.invoice.post","com.odc.accounting.db.JournalEntry","true","true","true","false",""
+"odc.sales-accounting.invoice.view-entry","com.odc.accounting.db.JournalEntry","true","false","false","false",""
+"odc.sales-accounting.invoice.reverse","com.odc.accounting.db.JournalEntry","true","true","true","false",""
+"odc.sales-accounting.invoice.cancel-with-reversal","com.odc.sales.db.SalesInvoice","true","true","false","false",""

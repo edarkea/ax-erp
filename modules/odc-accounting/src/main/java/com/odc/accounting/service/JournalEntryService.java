@@ -13,5 +13,5 @@ public interface JournalEntryService {
   JournalEntry restore(JournalEntry entry);
   void requireEditable(JournalEntry entry);
   void requireUsable(JournalEntry entry);
-  Optional<JournalEntry> findBySource(Company company, String sourceModel, Long sourceId);
+  Optional<JournalEntry> findBySource(Company company, String sourceModel, Long sourceRecordId);
 }

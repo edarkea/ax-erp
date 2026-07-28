@@ -61,8 +61,8 @@
     <panel title="Source" collapse="true">
       <field name="sourceModule" readonlyIf="status != 'DRAFT' || archived"/>
       <field name="sourceModel" readonlyIf="status != 'DRAFT' || archived"/>
-      <field name="sourceId" readonlyIf="status != 'DRAFT' || archived"/>
-      <field name="sourceReference" readonlyIf="status != 'DRAFT' || archived"/>
+      <field name="sourceRecordId" readonlyIf="status != 'DRAFT' || archived"/>
+      <field name="sourceDocumentNo" readonlyIf="status != 'DRAFT' || archived"/>
     </panel>
     <panel title="Cancellation" showIf="status == 'DRAFT' || status == 'CANCELLED'">
       <field name="cancelReason" readonlyIf="status != 'DRAFT' || archived"/>

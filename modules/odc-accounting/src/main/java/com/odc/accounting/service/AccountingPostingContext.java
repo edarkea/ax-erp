@@ -9,4 +9,4 @@ import java.time.LocalDate;
 public record AccountingPostingContext(
     Company company, Branch branch, Currency currency, String documentGroup,
     String documentType, LocalDate accountingDate, Party party,
-    String sourceModule, String sourceModel, Long sourceId) {}
+    String sourceModule, String sourceModel, Long sourceRecordId) {}

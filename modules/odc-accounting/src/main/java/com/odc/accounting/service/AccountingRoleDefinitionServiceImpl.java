@@ -75,6 +75,17 @@ public class AccountingRoleDefinitionServiceImpl implements AccountingRoleDefini
       throw error("Accounting role must be active and not archived.");
   }
 
+  @Override
+  public AccountingRoleDefinition requireByCode(String code) {
+    String normalized = required(code, "Accounting role code is required.").toUpperCase();
+    var values = repository.all()
+        .filter("self.code = :code AND self.archived = false AND self.active = true")
+        .bind("code", normalized).fetch(0, 2);
+    if (values.isEmpty()) throw error("Accounting role is not configured.");
+    if (values.size() > 1) throw error("Accounting role configuration is ambiguous.");
+    return values.get(0);
+  }
+
   protected AccountingRoleDefinition findDuplicate(AccountingRoleDefinition value) {
     String filter = "self.code = :code AND self.archived = false";
     var query = repository.all().filter(filter).bind("code", value.getCode());

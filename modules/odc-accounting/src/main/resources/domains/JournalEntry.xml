@@ -22,8 +22,8 @@
     <string name="description" title="Description" large="true" required="true"/>
     <string name="sourceModule" title="Source module"/>
     <string name="sourceModel" title="Source model"/>
-    <long name="sourceId" title="Source identifier"/>
-    <string name="sourceReference" title="Source reference"/>
+    <long name="sourceRecordId" title="Source record identifier"/>
+    <string name="sourceDocumentNo" title="Source document number"/>
     <integer name="postingYear" title="Posting year"/>
     <long name="postingSequence" title="Posting sequence"/>
     <datetime name="postedAt" title="Posted at"/>

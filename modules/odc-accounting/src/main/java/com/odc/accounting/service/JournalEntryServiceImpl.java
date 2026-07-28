@@ -112,11 +112,11 @@ public class JournalEntryServiceImpl implements JournalEntryService {
   }
 
   @Override
-  public Optional<JournalEntry> findBySource(Company company, String sourceModel, Long sourceId) {
+  public Optional<JournalEntry> findBySource(Company company, String sourceModel, Long sourceRecordId) {
     requireCompany(company);
     String model = required(sourceModel, "Source model is required.");
-    if (sourceId == null || sourceId < 0) throw error("Source identifier must not be negative.");
-    List<JournalEntry> entries = findSourceEntries(company, model, sourceId);
+    if (sourceRecordId == null || sourceRecordId < 0) throw error("Source identifier must not be negative.");
+    List<JournalEntry> entries = findSourceEntries(company, model, sourceRecordId);
     if (entries.size() > 1) throw error("Multiple journal entries exist for the same source.");
     return entries.stream().findFirst();
   }
@@ -136,8 +136,8 @@ public class JournalEntryServiceImpl implements JournalEntryService {
     entry.setReference(optional(entry.getReference(), 255, "Reference is too long."));
     entry.setSourceModule(optional(entry.getSourceModule(), 50, "Source module is too long."));
     entry.setSourceModel(optional(entry.getSourceModel(), 255, "Source model is too long."));
-    entry.setSourceReference(optional(entry.getSourceReference(), 255, "Source reference is too long."));
-    if (entry.getSourceId() != null && entry.getSourceId() < 0)
+    entry.setSourceDocumentNo(optional(entry.getSourceDocumentNo(), 255, "Source reference is too long."));
+    if (entry.getSourceRecordId() != null && entry.getSourceRecordId() < 0)
       throw error("Source identifier must not be negative.");
     validateBranch(entry);
     validateParty(entry);
@@ -235,10 +235,13 @@ public class JournalEntryServiceImpl implements JournalEntryService {
     if (locked == null) throw error("Journal entry does not exist.");
     return locked;
   }
-  protected List<JournalEntry> findSourceEntries(Company company, String model, Long sourceId) {
+  protected List<JournalEntry> findSourceEntries(Company company, String model, Long sourceRecordId) {
     return repository.all()
-        .filter("self.company = :company AND self.sourceModel = :model AND self.sourceId = :sourceId")
-        .bind("company", company).bind("model", model).bind("sourceId", sourceId).fetch(0, 2);
+        .filter("self.company = :company AND self.sourceModel = :model "
+            + "AND self.sourceRecordId = :sourceRecordId AND self.reversalOf IS NULL "
+            + "AND self.archived = false")
+        .bind("company", company).bind("model", model)
+        .bind("sourceRecordId", sourceRecordId).fetch(0, 2);
   }
   private String required(String value, String message) {
     if (value == null || value.trim().isEmpty()) throw error(message);

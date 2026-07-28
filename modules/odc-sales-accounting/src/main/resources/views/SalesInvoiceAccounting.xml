@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/object-views https://axelor.com/xml/ns/object-views/object-views_8.0.xsd">
+  <form name="sales-invoice-form" title="Sales invoice"
+    model="com.odc.sales.db.SalesInvoice"
+    extension="true">
+    <extend target="//panel[@title='Actions']">
+      <insert position="after">
+        <panel name="accountingPanel" title="Accounting">
+          <field name="$accountingStatus" title="Accounting status" readonly="true"/>
+          <field name="$accountingEntryNumber" title="Journal entry number" readonly="true"/>
+          <button name="postInvoiceAccounting" title="Post invoice"
+            showIf="status == 'CONFIRMED' &amp;&amp; $accountingStatus == 'NOT_POSTED'"
+            onClick="action-odc-sales-accounting-post"/>
+          <button name="viewInvoiceAccounting" title="View journal entry"
+            showIf="$accountingStatus == 'POSTED' || $accountingStatus == 'REVERSED'"
+            onClick="action-odc-sales-accounting-open"/>
+          <field name="$reversalDate" title="Reversal date"
+            showIf="$accountingStatus == 'POSTED'"/>
+          <field name="$reversalReason" title="Reversal reason"
+            showIf="$accountingStatus == 'POSTED'"/>
+          <button name="reverseInvoiceAccounting" title="Reverse accounting"
+            showIf="status == 'CONFIRMED' &amp;&amp; $accountingStatus == 'POSTED'"
+            onClick="action-odc-sales-accounting-reverse"/>
+        </panel>
+      </insert>
+    </extend>
+    <extend target="/">
+      <attribute name="onLoad"
+        value="action-odc-sales-accounting-status"/>
+    </extend>
+  </form>
+  <action-method name="action-odc-sales-accounting-status">
+    <call class="com.odc.sales.accounting.web.SalesInvoiceAccountingController" method="loadStatus"/>
+  </action-method>
+  <action-method name="action-odc-sales-accounting-post">
+    <call class="com.odc.sales.accounting.web.SalesInvoiceAccountingController" method="post"/>
+  </action-method>
+  <action-method name="action-odc-sales-accounting-open">
+    <call class="com.odc.sales.accounting.web.SalesInvoiceAccountingController" method="openPosting"/>
+  </action-method>
+  <action-method name="action-odc-sales-accounting-reverse">
+    <call class="com.odc.sales.accounting.web.SalesInvoiceAccountingController" method="reverse"/>
+  </action-method>
+</object-views>
