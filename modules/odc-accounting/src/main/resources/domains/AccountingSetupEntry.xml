@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<domain-models xmlns="http://axelor.com/xml/ns/domain-models"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/domain-models https://axelor.com/xml/ns/domain-models/domain-models_8.0.xsd">
+  <module name="odc-accounting" package="com.odc.accounting.db"/>
+  <entity name="AccountingSetupEntry" table="odc_accounting_setup_entry"
+    extends="com.odc.organization.db.OdcAuditableModel">
+    <many-to-one name="company" title="Company" ref="com.odc.organization.db.Company" required="true"/>
+    <string name="documentGroup" title="Document group"
+      selection="odc.accounting.document.group" required="true"/>
+    <string name="documentType" title="Document type"
+      selection="odc.accounting.document.type"/>
+    <many-to-one name="accountingRoleDefinition" title="Accounting role"
+      ref="AccountingRoleDefinition" required="true"/>
+    <many-to-one name="account" title="Account" ref="ChartAccount" required="true"/>
+    <many-to-one name="branch" title="Branch" ref="com.odc.organization.db.Branch"/>
+    <many-to-one name="currency" title="Currency" ref="com.odc.reference.db.Currency"/>
+    <integer name="priority" title="Priority" default="100"/>
+    <string name="notes" title="Notes" large="true"/>
+    <boolean name="active" title="Active" default="true"/>
+  </entity>
+</domain-models>

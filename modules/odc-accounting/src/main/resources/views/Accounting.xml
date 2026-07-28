@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/object-views https://axelor.com/xml/ns/object-views/object-views_8.0.xsd">
+  <selection name="odc.accounting.account.type">
+    <option value="ASSET">Asset</option><option value="LIABILITY">Liability</option>
+    <option value="EQUITY">Equity</option><option value="INCOME">Income</option>
+    <option value="EXPENSE">Expense</option><option value="MEMORANDUM">Memorandum</option>
+  </selection>
+  <selection name="odc.accounting.normal.balance">
+    <option value="DEBIT">Debit</option><option value="CREDIT">Credit</option>
+  </selection>
+  <selection name="odc.accounting.document.group">
+    <option value="SALES">Sales</option><option value="PURCHASES">Purchases</option>
+    <option value="TREASURY">Treasury</option><option value="GENERAL">General</option>
+  </selection>
+  <selection name="odc.accounting.document.type">
+    <option value="SALES_INVOICE">Sales invoice</option><option value="CREDIT_NOTE">Credit note</option>
+    <option value="DEBIT_NOTE">Debit note</option><option value="WITHHOLDING">Withholding</option>
+    <option value="SHIPPING_GUIDE">Shipping guide</option>
+    <option value="GENERAL_ENTRY">General entry</option>
+  </selection>
+  <selection name="odc.accounting.side.hint">
+    <option value="DEBIT">Debit</option><option value="CREDIT">Credit</option>
+    <option value="EITHER">Either</option>
+  </selection>
+
+  <grid name="chart-account-grid" title="Chart of accounts" model="com.odc.accounting.db.ChartAccount">
+    <field name="company"/><field name="code"/><field name="name"/><field name="accountType"/>
+    <field name="normalBalance"/><field name="isPosting"/><field name="parent"/>
+    <field name="active"/><field name="archived"/>
+  </grid>
+  <form name="chart-account-form" title="Account" model="com.odc.accounting.db.ChartAccount"
+    onNew="action-odc-accounting-load-company,action-odc-accounting-parent-domain"
+    onLoad="action-odc-accounting-parent-domain">
+    <panel title="General information"><field name="company" readonly="true"/><field name="code"/>
+      <field name="name"/><field name="accountType" onChange="action-odc-accounting-parent-domain"/>
+      <field name="normalBalance"/><field name="active"/></panel>
+    <panel title="Hierarchy"><field name="parent"/><field name="sequence"/></panel>
+    <panel title="Configuration"><field name="isPosting"/><field name="description"/></panel>
+    <panel title="Audit" showIf="id != null" collapse="true"><field name="createdBy" readonly="true"/>
+      <field name="createdOn" readonly="true"/><field name="updatedBy" readonly="true"/>
+      <field name="updatedOn" readonly="true"/></panel>
+  </form>
+  <tree name="chart-account-tree" title="Chart of accounts">
+    <column name="code"/>
+    <column name="name"/>
+    <column name="accountType"/>
+    <column name="normalBalance"/>
+    <column name="isPosting"/>
+    <column name="parent"/>
+    <node model="com.odc.accounting.db.ChartAccount" parent="parent">
+      <field name="code"/>
+      <field name="name"/>
+      <field name="accountType"/>
+      <field name="normalBalance"/>
+      <field name="isPosting"/>
+      <field name="parent"/>
+    </node>
+  </tree>
+
+  <grid name="accounting-role-definition-grid" title="Accounting roles"
+    model="com.odc.accounting.db.AccountingRoleDefinition">
+    <field name="code"/><field name="name"/><field name="documentGroup"/><field name="documentType"/>
+    <field name="sideHint"/><field name="requiresParty"/><field name="requiresDueDate"/>
+    <field name="allowManualSelection"/><field name="systemDefined"/><field name="active"/>
+    <field name="archived"/>
+  </grid>
+  <form name="accounting-role-definition-form" title="Accounting role"
+    model="com.odc.accounting.db.AccountingRoleDefinition">
+    <panel title="General information"><field name="code" readonlyIf="systemDefined"/>
+      <field name="name"/><field name="description"/><field name="documentGroup"/>
+      <field name="documentType"/><field name="sideHint"/></panel>
+    <panel title="Behavior"><field name="requiresParty"/><field name="requiresDueDate"/>
+      <field name="allowManualSelection"/><field name="systemDefined" readonly="true"/>
+      <field name="active"/></panel>
+    <panel title="Audit" showIf="id != null" collapse="true"><field name="createdBy" readonly="true"/>
+      <field name="createdOn" readonly="true"/><field name="updatedBy" readonly="true"/>
+      <field name="updatedOn" readonly="true"/></panel>
+  </form>
+
+  <grid name="accounting-setup-entry-grid" title="Accounting setup"
+    model="com.odc.accounting.db.AccountingSetupEntry">
+    <field name="company"/><field name="documentGroup"/><field name="documentType"/>
+    <field name="accountingRoleDefinition"/><field name="account"/><field name="branch"/>
+    <field name="currency"/><field name="priority"/><field name="active"/><field name="archived"/>
+  </grid>
+  <form name="accounting-setup-entry-form" title="Accounting setup"
+    model="com.odc.accounting.db.AccountingSetupEntry"
+    onNew="action-odc-accounting-load-company,action-odc-accounting-setup-domains"
+    onLoad="action-odc-accounting-setup-domains">
+    <panel title="Context"><field name="company" readonly="true"/>
+      <field name="documentGroup"/><field name="documentType"/>
+      <field name="branch"/><field name="currency" domain="self.archived = false"/></panel>
+    <panel title="Accounting role"><field name="accountingRoleDefinition"
+      domain="self.archived = false AND self.active = true"/></panel>
+    <panel title="Account"><field name="account"/></panel>
+    <panel title="Priority"><field name="priority"/><field name="notes"/><field name="active"/></panel>
+    <panel title="Audit" showIf="id != null" collapse="true"><field name="createdBy" readonly="true"/>
+      <field name="createdOn" readonly="true"/><field name="updatedBy" readonly="true"/>
+      <field name="updatedOn" readonly="true"/></panel>
+  </form>
+
+  <action-method name="action-odc-accounting-load-company">
+    <call class="com.odc.organization.web.ActiveOrganizationController" method="loadCompany"/>
+  </action-method>
+  <action-method name="action-odc-accounting-parent-domain">
+    <call class="com.odc.accounting.web.AccountingController" method="configureAccountParentDomain"/>
+  </action-method>
+  <action-method name="action-odc-accounting-setup-domains">
+    <call class="com.odc.accounting.web.AccountingController" method="configureSetupDomains"/>
+  </action-method>
+  <action-method name="action-odc-accounting-open-accounts">
+    <call class="com.odc.accounting.web.AccountingController" method="openAccounts"/>
+  </action-method>
+  <action-method name="action-odc-accounting-open-account-tree">
+    <call class="com.odc.accounting.web.AccountingController" method="openAccountTree"/>
+  </action-method>
+  <action-method name="action-odc-accounting-open-setup">
+    <call class="com.odc.accounting.web.AccountingController" method="openSetup"/>
+  </action-method>
+  <action-view name="action-chart-account-view" title="Chart of accounts"
+    model="com.odc.accounting.db.ChartAccount">
+    <view type="grid" name="chart-account-grid"/><view type="form" name="chart-account-form"/>
+    <domain>self.archived = false</domain>
+  </action-view>
+  <action-view name="action-chart-account-tree-view" title="Account tree"
+    model="com.odc.accounting.db.ChartAccount">
+    <view type="tree" name="chart-account-tree"/><view type="form" name="chart-account-form"/>
+    <domain>self.archived = false</domain>
+  </action-view>
+  <action-view name="action-accounting-role-definition-view" title="Accounting roles"
+    model="com.odc.accounting.db.AccountingRoleDefinition">
+    <view type="grid" name="accounting-role-definition-grid"/>
+    <view type="form" name="accounting-role-definition-form"/>
+    <domain>self.archived = false</domain>
+  </action-view>
+  <action-view name="action-accounting-setup-entry-view" title="Accounting setup"
+    model="com.odc.accounting.db.AccountingSetupEntry">
+    <view type="grid" name="accounting-setup-entry-grid"/>
+    <view type="form" name="accounting-setup-entry-form"/>
+    <domain>self.archived = false</domain>
+  </action-view>
+  <menuitem name="menu-odc-accounting-root" title="Accounting" order="700"/>
+  <menuitem name="menu-odc-chart-account" title="Chart of accounts"
+    parent="menu-odc-accounting-root" action="action-odc-accounting-open-accounts" order="10"/>
+  <menuitem name="menu-odc-chart-account-tree" title="Account tree"
+    parent="menu-odc-accounting-root" action="action-odc-accounting-open-account-tree" order="20"/>
+  <menuitem name="menu-odc-accounting-role" title="Accounting roles"
+    parent="menu-odc-accounting-root" action="action-accounting-role-definition-view" order="30"/>
+  <menuitem name="menu-odc-accounting-setup" title="Accounting setup"
+    parent="menu-odc-accounting-root" action="action-odc-accounting-open-setup" order="40"/>
+</object-views>

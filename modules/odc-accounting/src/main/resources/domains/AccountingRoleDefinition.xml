@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<domain-models xmlns="http://axelor.com/xml/ns/domain-models"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/domain-models https://axelor.com/xml/ns/domain-models/domain-models_8.0.xsd">
+  <module name="odc-accounting" package="com.odc.accounting.db"/>
+  <entity name="AccountingRoleDefinition" table="odc_accounting_role_definition"
+    extends="com.odc.organization.db.OdcAuditableModel">
+    <string name="code" title="Code" required="true"/>
+    <string name="name" title="Name" required="true" namecolumn="true"/>
+    <string name="description" title="Description" large="true"/>
+    <string name="documentGroup" title="Document group"
+      selection="odc.accounting.document.group" required="true"/>
+    <string name="documentType" title="Document type"
+      selection="odc.accounting.document.type"/>
+    <string name="sideHint" title="Side hint"
+      selection="odc.accounting.side.hint" required="true"/>
+    <boolean name="requiresParty" title="Requires party" default="false"/>
+    <boolean name="requiresDueDate" title="Requires due date" default="false"/>
+    <boolean name="allowManualSelection" title="Allow manual selection" default="false"/>
+    <boolean name="systemDefined" title="System defined" default="false"/>
+    <boolean name="active" title="Active" default="true"/>
+  </entity>
+</domain-models>
