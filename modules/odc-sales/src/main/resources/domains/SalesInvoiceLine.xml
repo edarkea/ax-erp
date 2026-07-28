@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<domain-models xmlns="http://axelor.com/xml/ns/domain-models"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/domain-models https://axelor.com/xml/ns/domain-models/domain-models_8.0.xsd">
+  <module name="odc-sales" package="com.odc.sales.db"/>
+  <entity name="SalesInvoiceLine" table="odc_sales_invoice_line"
+    extends="com.odc.organization.db.OdcAuditableModel">
+    <many-to-one name="salesInvoice" title="Sales invoice" ref="SalesInvoice" required="true"/>
+    <integer name="sequence" title="Sequence" required="true"/>
+    <many-to-one name="item" title="Item" ref="com.odc.catalog.db.Item" required="true"/>
+    <string name="itemCodeSnapshot" title="Item code snapshot"/>
+    <string name="itemNameSnapshot" title="Item name snapshot"/>
+    <many-to-one name="uom" title="Unit of measure" ref="com.odc.catalog.db.UnitOfMeasure"/>
+    <string name="uomCodeSnapshot" title="UOM code snapshot"/>
+    <string name="description" title="Description"/>
+    <decimal name="quantity" title="Quantity" precision="18" scale="6" required="true"/>
+    <string name="priceSource" title="Price source" selection="odc.sales.price.source"
+      default="PRICE_LIST" required="true"/>
+    <many-to-one name="priceListItem" title="Price list item" ref="com.odc.pricing.db.PriceListItem"/>
+    <decimal name="unitPrice" title="Unit price" precision="18" scale="6" default="0" required="true"/>
+    <many-to-one name="taxCategory" title="Tax category" ref="com.odc.tax.db.TaxCategory"/>
+    <string name="taxCategoryCodeSnapshot" title="Tax category code snapshot"/>
+    <many-to-one name="taxRate" title="Tax rate" ref="com.odc.tax.db.TaxRate"/>
+    <decimal name="taxRateSnapshot" title="Tax rate snapshot" precision="10" scale="4" default="0" required="true"/>
+    <decimal name="lineSubtotal" title="Line subtotal" precision="18" scale="4" default="0" required="true"/>
+    <decimal name="taxableBase" title="Taxable base" precision="18" scale="4" default="0" required="true"/>
+    <decimal name="taxAmount" title="Tax amount" precision="18" scale="4" default="0" required="true"/>
+    <decimal name="lineTotal" title="Line total" precision="18" scale="4" default="0" required="true"/>
+  </entity>
+</domain-models>

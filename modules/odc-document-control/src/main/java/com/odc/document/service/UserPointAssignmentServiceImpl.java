@@ -1,15 +1,20 @@
 package com.odc.document.service;
 
+import com.axelor.auth.AuthUtils;
+import com.axelor.auth.db.User;
 import com.axelor.i18n.I18n;
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 import com.odc.document.db.UserPointAssignment;
+import com.odc.document.db.PointOfSale;
 import com.odc.document.db.repo.UserPointAssignmentRepository;
 import com.odc.organization.db.Branch;
 import com.odc.organization.db.Company;
 import com.odc.organization.db.repo.UserBranchAccessRepository;
 import com.odc.organization.db.repo.UserCompanyAccessRepository;
 import com.odc.organization.service.AccessValidationService;
+import java.util.List;
+import java.util.Optional;
 
 public class UserPointAssignmentServiceImpl implements UserPointAssignmentService {
   private final UserPointAssignmentRepository repository;
@@ -61,6 +66,50 @@ public class UserPointAssignmentServiceImpl implements UserPointAssignmentServic
     if (query.fetchOne() != null) throw error("User is already assigned to this point.");
     if (Boolean.TRUE.equals(value.getIsDefault()) && otherDefault(value, company) != null)
       throw error("User already has a default point for this company and type.");
+  }
+
+  @Override
+  public Optional<UserPointAssignment> findActiveAssignment(User user, PointOfSale point) {
+    if (user == null || point == null) return Optional.empty();
+    List<UserPointAssignment> values = findActiveAssignments(user, point);
+    if (values.size() > 1)
+      throw error("Multiple active assignments exist for the selected emission point.");
+    return values.stream().findFirst();
+  }
+
+  @Override
+  public boolean hasUserAccess(User user, PointOfSale point) {
+    if (user == null || point == null) return false;
+    try {
+      accessValidationService.requireUsable(user);
+      configurationService.requireUsable(point);
+    } catch (IllegalArgumentException exception) {
+      return false;
+    }
+    Branch branch = point.getEmissionEstablishment().getBranch();
+    Company company = branch.getCompany();
+    UserPointAssignment probe = new UserPointAssignment();
+    probe.setUser(user);
+    if (!hasCompanyAccess(probe, company) || !hasBranchAccess(probe, branch)) return false;
+    return findActiveAssignment(user, point).isPresent();
+  }
+
+  @Override
+  public void requireUserAccess(User user, PointOfSale point) {
+    if (!hasUserAccess(user, point))
+      throw error("You do not have access to the selected emission point.");
+  }
+
+  @Override
+  public void requireCurrentUserAccess(PointOfSale point) {
+    requireUserAccess(AuthUtils.getUser(), point);
+  }
+
+  protected List<UserPointAssignment> findActiveAssignments(User user, PointOfSale point) {
+    return repository.all()
+        .filter("self.user = :user AND self.pointOfSale = :point "
+            + "AND self.active = true AND self.archived = false")
+        .bind("user", user).bind("point", point).fetch(0, 2);
   }
 
   protected boolean hasCompanyAccess(UserPointAssignment value, Company company) {

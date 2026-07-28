@@ -1,0 +1,6 @@
+package com.odc.sales.service;
+import com.axelor.auth.AuthUtils;import com.axelor.db.JPA;import com.axelor.i18n.I18n;import com.google.inject.Inject;import com.google.inject.persist.Transactional;import com.odc.sales.db.SalesInvoice;import com.odc.sales.db.repo.SalesInvoiceRepository;import jakarta.persistence.LockModeType;import java.time.LocalDateTime;
+public class SalesInvoiceCancellationServiceImpl implements SalesInvoiceCancellationService{
+ private final SalesInvoiceRepository repository;@Inject public SalesInvoiceCancellationServiceImpl(SalesInvoiceRepository r){repository=r;}
+ @Transactional public SalesInvoice cancel(SalesInvoice v,String reason){if(reason==null||reason.trim().isEmpty())throw new IllegalArgumentException(I18n.get("Cancellation reason is required."));if(v==null||v.getId()==null)throw new IllegalArgumentException(I18n.get("Persisted sales invoice is required."));SalesInvoice i=JPA.em().find(SalesInvoice.class,v.getId(),LockModeType.PESSIMISTIC_WRITE);if(i==null||Boolean.TRUE.equals(i.getArchived())||!java.util.List.of("DRAFT","CONFIRMED").contains(i.getStatus()))throw new IllegalArgumentException(I18n.get("Only draft or confirmed invoices can be cancelled."));i.setStatus("CANCELLED");i.setCancelReason(reason.trim());i.setCancelledAt(LocalDateTime.now());i.setCancelledBy(AuthUtils.getUser());return repository.save(i);}
+}

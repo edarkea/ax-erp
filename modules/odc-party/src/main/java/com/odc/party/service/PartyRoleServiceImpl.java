@@ -41,8 +41,9 @@ public class PartyRoleServiceImpl implements PartyRoleService {
   @Override
   public boolean hasRole(Party party, String roleType) {
     return repository.all().filter(
-        "self.party = :party AND self.roleType = :type AND self.archived = false "
-            + "AND self.active = true")
+        "self.party = :party AND self.roleType = :type "
+            + "AND (self.archived = false OR self.archived IS NULL) "
+            + "AND (self.active = true OR self.active IS NULL)")
         .bind("party", party).bind("type", roleType).count() > 0;
   }
 
@@ -67,7 +68,8 @@ public class PartyRoleServiceImpl implements PartyRoleService {
 
   protected PartyRole findDuplicate(PartyRole role) {
     String filter =
-        "self.party = :party AND self.roleType = :type AND self.archived = false";
+        "self.party = :party AND self.roleType = :type "
+            + "AND (self.archived = false OR self.archived IS NULL)";
     var query = repository.all().filter(filter)
         .bind("party", role.getParty()).bind("type", role.getRoleType());
     if (role.getId() != null) {

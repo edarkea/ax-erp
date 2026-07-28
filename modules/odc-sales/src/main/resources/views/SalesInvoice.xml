@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://axelor.com/xml/ns/object-views https://axelor.com/xml/ns/object-views/object-views_8.0.xsd">
+ <selection name="odc.sales.invoice.status"><option value="DRAFT">Draft</option><option value="CONFIRMED">Confirmed</option><option value="CANCELLED">Cancelled</option></selection>
+ <selection name="odc.sales.price.source"><option value="PRICE_LIST">Price list</option><option value="MANUAL">Manual</option></selection>
+ <grid name="sales-invoice-grid" title="Sales invoices" model="com.odc.sales.db.SalesInvoice">
+  <field name="documentNo"/><field name="invoiceDate"/><field name="dueDate"/><field name="branch"/><field name="customer"/><field name="priceList"/><field name="currency"/><field name="subtotal"/><field name="taxTotal"/><field name="grandTotal"/><field name="status"/><field name="archived"/>
+ </grid>
+ <grid name="sales-invoice-line-grid" title="Lines" model="com.odc.sales.db.SalesInvoiceLine" orderBy="sequence">
+  <field name="sequence"/><field name="item"/><field name="description"/><field name="quantity"/><field name="uom"/><field name="priceSource"/><field name="unitPrice"/><field name="taxCategory"/><field name="taxRateSnapshot"/><field name="lineSubtotal"/><field name="taxAmount"/><field name="lineTotal"/>
+ </grid>
+ <form name="sales-invoice-line-form" title="Sales invoice line" model="com.odc.sales.db.SalesInvoiceLine" onNew="action-odc-sales-initialize-line"><panel title="Line"><field name="sequence"/><field name="item" onChange="action-odc-sales-sync-line"/><field name="description"/><field name="quantity" onChange="action-odc-sales-sync-line"/><field name="priceSource" onChange="action-odc-sales-change-price-source"/><field name="priceListItem" readonly="true"/><field name="unitPrice" readonlyIf="priceSource != 'MANUAL'" onChange="action-odc-sales-calculate-line"/><field name="taxCategory" onChange="action-odc-sales-sync-line"/><field name="taxRate" readonly="true"/><field name="taxRateSnapshot" readonly="true"/><field name="lineSubtotal" readonly="true"/><field name="taxAmount" readonly="true"/><field name="lineTotal" readonly="true"/></panel></form>
+ <form name="sales-invoice-form" title="Sales invoice" model="com.odc.sales.db.SalesInvoice" onNew="action-odc-sales-initialize">
+  <panel title="General"><field name="company" readonly="true"/><field name="branch" readonlyIf="status != 'DRAFT' || archived"/><field name="status" readonly="true"/><field name="invoiceDate" readonlyIf="status != 'DRAFT' || archived"/><field name="dueDate" readonlyIf="status != 'DRAFT' || archived"/><field name="customer" readonlyIf="status != 'DRAFT' || archived"/></panel>
+  <panel title="Pricing"><field name="priceList" readonlyIf="status != 'DRAFT' || archived" onChange="action-odc-sales-sync-price-list-currency"/><field name="currency" readonly="true"/><field name="exchangeRate" readonlyIf="status != 'DRAFT' || archived"/></panel>
+  <panel-related field="lines" title="Lines" grid-view="sales-invoice-line-grid" form-view="sales-invoice-line-form" readonlyIf="status != 'DRAFT' || archived" onChange="action-odc-sales-calculate-context"/>
+  <panel title="Totals"><field name="subtotal" readonly="true"/><field name="taxTotal" readonly="true"/><field name="grandTotal" readonly="true"/></panel>
+  <panel title="Numbering"><field name="documentSeries" readonlyIf="status != 'DRAFT' || archived" onChange="action-odc-sales-preview-document-no"/><field name="documentNoPreview" readonly="true" showIf="status == 'DRAFT'"/><field name="documentNo" readonly="true" showIf="status != 'DRAFT'"/><field name="documentSequenceReservation" readonly="true"/></panel>
+  <panel title="Actions"><button name="refreshPrices" title="Refresh prices" showIf="status == 'DRAFT' &amp;&amp; !archived" onClick="action-odc-sales-prices"/><button name="refreshTaxes" title="Refresh taxes" showIf="status == 'DRAFT' &amp;&amp; !archived" onClick="action-odc-sales-taxes"/><button name="recalculate" title="Recalculate" showIf="status == 'DRAFT' &amp;&amp; !archived" onClick="action-odc-sales-calculate"/><button name="confirm" title="Confirm" showIf="id != null &amp;&amp; status == 'DRAFT' &amp;&amp; !archived" onClick="action-odc-sales-confirm"/><field name="cancelReason" showIf="status != 'CANCELLED'"/><button name="cancel" title="Cancel" showIf="id != null &amp;&amp; (status == 'DRAFT' || status == 'CONFIRMED')" onClick="action-odc-sales-cancel"/></panel>
+  <panel title="History" showIf="status != 'DRAFT'"><field name="confirmedAt" readonly="true"/><field name="confirmedBy" readonly="true"/><field name="cancelledAt" readonly="true"/><field name="cancelledBy" readonly="true"/><field name="cancelReason" readonly="true"/></panel>
+ </form>
+ <action-method name="action-odc-sales-initialize"><call class="com.odc.sales.web.SalesInvoiceController" method="initialize"/></action-method>
+ <action-method name="action-odc-sales-initialize-line"><call class="com.odc.sales.web.SalesInvoiceController" method="initializeLine"/></action-method>
+ <action-method name="action-odc-sales-open"><call class="com.odc.sales.web.SalesInvoiceController" method="open"/></action-method>
+ <action-method name="action-odc-sales-prices"><call class="com.odc.sales.web.SalesInvoiceController" method="prices"/></action-method>
+ <action-method name="action-odc-sales-taxes"><call class="com.odc.sales.web.SalesInvoiceController" method="taxes"/></action-method>
+ <action-method name="action-odc-sales-calculate"><call class="com.odc.sales.web.SalesInvoiceController" method="calculate"/></action-method>
+ <action-method name="action-odc-sales-confirm"><call class="com.odc.sales.web.SalesInvoiceController" method="confirm"/></action-method>
+ <action-method name="action-odc-sales-cancel"><call class="com.odc.sales.web.SalesInvoiceController" method="cancel"/></action-method>
+ <action-method name="action-odc-sales-sync-price-list-currency"><call class="com.odc.sales.web.SalesInvoiceController" method="syncPriceListCurrency"/></action-method>
+ <action-method name="action-odc-sales-sync-line"><call class="com.odc.sales.web.SalesInvoiceController" method="syncLine"/></action-method>
+ <action-method name="action-odc-sales-change-price-source"><call class="com.odc.sales.web.SalesInvoiceController" method="changePriceSource"/></action-method>
+ <action-method name="action-odc-sales-calculate-line"><call class="com.odc.sales.web.SalesInvoiceController" method="calculateLine"/></action-method>
+ <action-method name="action-odc-sales-calculate-context"><call class="com.odc.sales.web.SalesInvoiceController" method="calculateContext"/></action-method>
+ <action-method name="action-odc-sales-preview-document-no"><call class="com.odc.sales.web.SalesInvoiceController" method="previewDocumentNo"/></action-method>
+ <menuitem name="menu-odc-sales-root" title="Sales" order="800"/><menuitem name="menu-odc-sales-invoice" title="Sales invoices" parent="menu-odc-sales-root" action="action-odc-sales-open" order="10"/>
+</object-views>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<domain-models xmlns="http://axelor.com/xml/ns/domain-models"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/domain-models https://axelor.com/xml/ns/domain-models/domain-models_8.0.xsd">
+  <module name="odc-sales" package="com.odc.sales.db"/>
+  <entity name="SalesInvoice" table="odc_sales_invoice"
+    extends="com.odc.organization.db.OdcAuditableModel">
+    <many-to-one name="company" title="Company" ref="com.odc.organization.db.Company" required="true"/>
+    <many-to-one name="branch" title="Branch" ref="com.odc.organization.db.Branch" required="true"/>
+    <many-to-one name="customer" title="Customer" ref="com.odc.party.db.Party" required="true"/>
+    <date name="invoiceDate" title="Invoice date" required="true"/>
+    <date name="dueDate" title="Due date"/>
+    <string name="status" title="Status" selection="odc.sales.invoice.status" default="DRAFT" required="true"/>
+    <many-to-one name="priceList" title="Price list" ref="com.odc.pricing.db.PriceList" required="true"/>
+    <many-to-one name="currency" title="Currency" ref="com.odc.reference.db.Currency" required="true"/>
+    <decimal name="exchangeRate" title="Exchange rate" precision="18" scale="8" default="1" required="true"/>
+    <many-to-one name="documentSeries" title="Document series" ref="com.odc.document.db.DocumentSeries"/>
+    <many-to-one name="documentSequenceReservation" title="Sequence reservation"
+      ref="com.odc.document.db.DocumentSequenceReservation"/>
+    <string name="documentNo" title="Document number"/>
+    <string name="documentNoPreview" title="Document number preview" transient="true"/>
+    <decimal name="subtotal" title="Subtotal" precision="18" scale="4" default="0" required="true"/>
+    <decimal name="taxTotal" title="Tax total" precision="18" scale="4" default="0" required="true"/>
+    <decimal name="grandTotal" title="Grand total" precision="18" scale="4" default="0" required="true"/>
+    <string name="notes" title="Notes" large="true"/>
+    <string name="internalReference" title="Internal reference"/>
+    <datetime name="confirmedAt" title="Confirmed at"/>
+    <many-to-one name="confirmedBy" title="Confirmed by" ref="com.axelor.auth.db.User"/>
+    <datetime name="cancelledAt" title="Cancelled at"/>
+    <many-to-one name="cancelledBy" title="Cancelled by" ref="com.axelor.auth.db.User"/>
+    <string name="cancelReason" title="Cancellation reason" large="true"/>
+    <one-to-many name="lines" title="Lines" ref="SalesInvoiceLine"
+      mappedBy="salesInvoice" orderBy="sequence"/>
+  </entity>
+</domain-models>
