@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<domain-models xmlns="http://axelor.com/xml/ns/domain-models"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/domain-models https://axelor.com/xml/ns/domain-models/domain-models_8.0.xsd">
+
+  <module name="odc-tax" package="com.odc.tax.db"/>
+
+  <entity name="TaxRate" table="odc_tax_rate">
+    <many-to-one name="taxCategory" title="Tax category" ref="TaxCategory"
+      required="true"/>
+    <decimal name="rate" title="Rate (%)" required="true" precision="10" scale="4"/>
+    <date name="validFrom" title="Valid from" required="true"/>
+    <date name="validUntil" title="Valid until"/>
+  </entity>
+
+</domain-models>

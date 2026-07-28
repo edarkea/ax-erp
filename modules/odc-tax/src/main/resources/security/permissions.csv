@@ -1,0 +1,7 @@
+"name","object","canRead","canWrite","canCreate","canRemove","condition"
+"odc.tax.category.read","com.odc.tax.db.TaxCategory","true","false","false","false",""
+"odc.tax.category.write","com.odc.tax.db.TaxCategory","true","true","true","false",""
+"odc.tax.category.archive","com.odc.tax.db.TaxCategory","true","true","false","false",""
+"odc.tax.rate.read","com.odc.tax.db.TaxRate","true","false","false","false",""
+"odc.tax.rate.manage","com.odc.tax.db.TaxRate","true","true","true","false",""
+"odc.tax.rate.archive","com.odc.tax.db.TaxRate","true","true","false","false",""

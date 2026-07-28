@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<domain-models xmlns="http://axelor.com/xml/ns/domain-models"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/domain-models https://axelor.com/xml/ns/domain-models/domain-models_8.0.xsd">
+
+  <module name="odc-tax" package="com.odc.tax.db"/>
+
+  <entity name="TaxCategory" table="odc_tax_category">
+    <many-to-one name="country" title="Country" ref="com.odc.reference.db.Country"
+      required="true"/>
+    <string name="code" title="Code" required="true"/>
+    <string name="name" title="Name" required="true" namecolumn="true"/>
+    <string name="type" title="Tax type" required="true"
+      selection="odc.tax.category.type"/>
+    <string name="description" title="Description" large="true"/>
+    <one-to-many name="rates" title="Tax rates" ref="TaxRate" mappedBy="taxCategory"/>
+  </entity>
+
+</domain-models>

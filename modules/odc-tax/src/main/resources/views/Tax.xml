@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/object-views https://axelor.com/xml/ns/object-views/object-views_8.0.xsd">
+
+  <selection name="odc.tax.category.type">
+    <option value="VAT">VAT</option>
+    <option value="WITHHOLDING">Withholding</option>
+    <option value="EXCISE">Excise tax</option>
+    <option value="OTHER">Other</option>
+  </selection>
+
+  <grid name="tax-category-grid" title="Tax categories"
+    model="com.odc.tax.db.TaxCategory">
+    <field name="country"/>
+    <field name="code"/>
+    <field name="name"/>
+    <field name="type"/>
+    <field name="archived"/>
+  </grid>
+
+  <form name="tax-category-form" title="Tax category"
+    model="com.odc.tax.db.TaxCategory" onSave="action-tax-category-validate">
+    <panel name="generalPanel" title="General information">
+      <field name="country" form-view="country-form" grid-view="country-grid"
+        domain="self.archived = false"/>
+      <field name="code"/>
+      <field name="name"/>
+      <field name="type"/>
+      <field name="description" colSpan="12"/>
+    </panel>
+    <panel name="ratesPanel" title="Rates and validity periods" showIf="id != null">
+      <field name="rates" form-view="tax-rate-form" grid-view="tax-rate-grid"
+        domain="self.archived = false"/>
+    </panel>
+    <panel name="auditPanel" title="Audit" showIf="id != null" collapse="true">
+      <field name="createdBy" readonly="true"/>
+      <field name="createdOn" readonly="true"/>
+      <field name="updatedBy" readonly="true"/>
+      <field name="updatedOn" readonly="true"/>
+    </panel>
+  </form>
+
+  <grid name="tax-rate-grid" title="Tax rates" model="com.odc.tax.db.TaxRate">
+    <field name="rate"/>
+    <field name="validFrom"/>
+    <field name="validUntil"/>
+    <field name="archived"/>
+  </grid>
+
+  <form name="tax-rate-form" title="Tax rate" model="com.odc.tax.db.TaxRate"
+    onSave="action-tax-rate-validate">
+    <panel name="mainPanel">
+      <field name="taxCategory" form-view="tax-category-form" readonlyIf="id != null"
+        grid-view="tax-category-grid"
+        domain="self.archived = false AND self.country.archived = false"/>
+      <field name="rate" readonlyIf="id != null"/>
+      <field name="validFrom" readonlyIf="id != null"/>
+      <field name="validUntil"/>
+      <button name="closeValidityBtn" title="Close validity"
+        onClick="action-tax-rate-close" showIf="id != null &amp;&amp; archived == false"/>
+    </panel>
+  </form>
+
+  <action-view name="action-tax-category-view" title="Tax categories"
+    model="com.odc.tax.db.TaxCategory">
+    <view type="grid" name="tax-category-grid"/>
+    <view type="form" name="tax-category-form"/>
+    <domain>self.archived = false AND self.country.archived = false</domain>
+  </action-view>
+
+  <action-method name="action-tax-category-validate">
+    <call class="com.odc.tax.web.TaxController" method="validateCategory"/>
+  </action-method>
+
+  <action-method name="action-tax-rate-validate">
+    <call class="com.odc.tax.web.TaxController" method="validateRate"/>
+  </action-method>
+
+  <action-method name="action-tax-rate-close">
+    <call class="com.odc.tax.web.TaxController" method="closeRate"/>
+  </action-method>
+
+  <menuitem name="menu-odc-configuration" title="Configuration" order="900"/>
+  <menuitem name="menu-odc-tax" title="Taxation" parent="menu-odc-configuration"
+    order="100"/>
+  <menuitem name="menu-odc-tax-category" title="Tax categories"
+    parent="menu-odc-tax" action="action-tax-category-view" order="10"/>
+
+</object-views>
