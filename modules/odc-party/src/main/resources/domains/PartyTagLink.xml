@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<domain-models xmlns="http://axelor.com/xml/ns/domain-models"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/domain-models https://axelor.com/xml/ns/domain-models/domain-models_8.0.xsd">
+  <module name="odc-party" package="com.odc.party.db"/>
+  <entity name="PartyTagLink" table="odc_party_tag_link">
+    <many-to-one name="party" title="Party" ref="Party" required="true"/>
+    <many-to-one name="tag" title="Tag" ref="PartyTag" required="true"/>
+  </entity>
+</domain-models>

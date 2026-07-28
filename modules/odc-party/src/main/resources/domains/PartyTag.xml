@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<domain-models xmlns="http://axelor.com/xml/ns/domain-models"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/domain-models https://axelor.com/xml/ns/domain-models/domain-models_8.0.xsd">
+  <module name="odc-party" package="com.odc.party.db"/>
+  <entity name="PartyTag" table="odc_party_tag"
+    extends="com.odc.organization.db.OdcAuditableModel">
+    <many-to-one name="company" title="Company" ref="com.odc.organization.db.Company"
+      required="true"/>
+    <string name="name" title="Name" required="true" namecolumn="true"/>
+    <string name="description" title="Description" large="true"/>
+    <boolean name="active" title="Active" default="true"/>
+  </entity>
+</domain-models>

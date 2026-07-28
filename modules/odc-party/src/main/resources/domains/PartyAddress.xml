@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<domain-models xmlns="http://axelor.com/xml/ns/domain-models"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/domain-models https://axelor.com/xml/ns/domain-models/domain-models_8.0.xsd">
+  <module name="odc-party" package="com.odc.party.db"/>
+  <entity name="PartyAddress" table="odc_party_address">
+    <many-to-one name="party" title="Party" ref="Party" required="true"/>
+    <many-to-one name="city" title="City" ref="com.odc.reference.db.City"/>
+    <string name="line1" title="Address line 1" required="true"/>
+    <string name="line2" title="Address line 2"/>
+    <string name="postalCode" title="Postal code"/>
+    <boolean name="isBillingDefault" title="Billing default" default="false"/>
+    <boolean name="isShippingDefault" title="Shipping default" default="false"/>
+    <boolean name="active" title="Active" default="true"/>
+  </entity>
+</domain-models>

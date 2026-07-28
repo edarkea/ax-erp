@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<domain-models xmlns="http://axelor.com/xml/ns/domain-models"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/domain-models https://axelor.com/xml/ns/domain-models/domain-models_8.0.xsd">
+  <module name="odc-catalog" package="com.odc.catalog.db"/>
+  <entity name="UnitOfMeasure" table="odc_unit_of_measure">
+    <string name="code" title="Code" required="true"/>
+    <string name="name" title="Name" required="true" namecolumn="true"/>
+    <string name="symbol" title="Symbol"/>
+    <integer name="decimalPrecision" title="Decimal precision" default="4"/>
+    <boolean name="active" title="Active" default="true"/>
+  </entity>
+</domain-models>

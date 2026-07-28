@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<domain-models xmlns="http://axelor.com/xml/ns/domain-models"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/domain-models https://axelor.com/xml/ns/domain-models/domain-models_8.0.xsd">
+  <module name="odc-party" package="com.odc.party.db"/>
+  <entity name="PartyRole" table="odc_party_role">
+    <many-to-one name="party" title="Party" ref="Party" required="true"/>
+    <string name="roleType" title="Role type" required="true"
+      selection="odc.party.role.type"/>
+    <boolean name="active" title="Active" default="true"/>
+  </entity>
+</domain-models>

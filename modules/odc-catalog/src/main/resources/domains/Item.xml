@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<domain-models xmlns="http://axelor.com/xml/ns/domain-models"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/domain-models https://axelor.com/xml/ns/domain-models/domain-models_8.0.xsd">
+  <module name="odc-catalog" package="com.odc.catalog.db"/>
+  <entity name="Item" table="odc_item"
+    extends="com.odc.organization.db.OdcAuditableModel">
+    <many-to-one name="company" title="Company" ref="com.odc.organization.db.Company" required="true"/>
+    <string name="itemType" title="Item type" required="true" selection="odc.catalog.item.type"/>
+    <string name="sku" title="SKU" required="true"/>
+    <string name="name" title="Name" required="true" namecolumn="true"/>
+    <string name="description" title="Description" large="true"/>
+    <string name="barcode" title="Barcode"/>
+    <many-to-one name="uom" title="Unit of measure" ref="UnitOfMeasure"/>
+    <many-to-one name="taxCategory" title="Tax category" ref="com.odc.tax.db.TaxCategory"/>
+    <many-to-one name="category" title="Item category" ref="ItemCategory"/>
+    <boolean name="active" title="Active" default="true"/>
+  </entity>
+</domain-models>

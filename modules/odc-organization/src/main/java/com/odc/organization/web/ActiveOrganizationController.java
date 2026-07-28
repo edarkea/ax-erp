@@ -33,6 +33,11 @@ public class ActiveOrganizationController {
         company == null ? "self.id = 0" : idDomain(service.getAvailableBranches(company)));
   }
 
+  public void loadCompany(ActionRequest request, ActionResponse response) {
+    response.setValue(
+        "company", Beans.get(ActiveOrganizationService.class).requireActiveCompany());
+  }
+
   public void companyChanged(ActionRequest request, ActionResponse response) {
     OrganizationContextSelector selector =
         request.getContext().asType(OrganizationContextSelector.class);

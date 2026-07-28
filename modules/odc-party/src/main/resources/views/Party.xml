@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/object-views https://axelor.com/xml/ns/object-views/object-views_8.0.xsd">
+  <selection name="odc.party.type"><option value="PERSON">Person</option><option value="ORGANIZATION">Organization</option></selection>
+  <selection name="odc.party.identification.type"><option value="NATIONAL_ID">National ID</option><option value="TAX_ID">Tax ID</option><option value="PASSPORT">Passport</option><option value="FOREIGN_ID">Foreign ID</option><option value="OTHER">Other</option></selection>
+  <selection name="odc.party.role.type"><option value="CUSTOMER">Customer</option><option value="SUPPLIER">Supplier</option><option value="EMPLOYEE">Employee</option><option value="OTHER">Other</option></selection>
+  <selection name="odc.party.contact.type"><option value="EMAIL">Email</option><option value="PHONE">Phone</option><option value="MOBILE">Mobile</option><option value="WEB">Web</option><option value="OTHER">Other</option></selection>
+  <grid name="party-grid" title="Parties" model="com.odc.party.db.Party">
+    <field name="company"/><field name="partyType"/><field name="displayName"/><field name="legalName"/>
+    <field name="taxIdentificationType"/><field name="taxId"/><field name="active"/><field name="archived"/>
+  </grid>
+  <grid name="party-role-grid" title="Roles" model="com.odc.party.db.PartyRole" editable="true">
+    <field name="roleType"/><field name="active"/><field name="archived"/>
+  </grid>
+  <form name="party-role-form" title="Role" model="com.odc.party.db.PartyRole"><panel><field name="party" hidden="true"/><field name="roleType"/><field name="active"/></panel></form>
+  <grid name="party-contact-grid" title="Contacts" model="com.odc.party.db.PartyContactPoint">
+    <field name="type"/><field name="value"/><field name="label"/><field name="isPrimary"/><field name="active"/>
+  </grid>
+  <form name="party-contact-form" title="Contact" model="com.odc.party.db.PartyContactPoint"><panel><field name="party" hidden="true"/><field name="type"/><field name="value"/><field name="label"/><field name="isPrimary"/><field name="active"/></panel></form>
+  <grid name="party-address-grid" title="Addresses" model="com.odc.party.db.PartyAddress">
+    <field name="line1"/><field name="city"/><field name="isBillingDefault"/><field name="isShippingDefault"/><field name="active"/>
+  </grid>
+  <form name="party-address-form" title="Address" model="com.odc.party.db.PartyAddress"><panel><field name="party" hidden="true"/><field name="line1"/><field name="line2"/><field name="city" domain="self.archived = false AND self.state.archived = false AND self.state.country.archived = false"/><field name="postalCode"/><field name="isBillingDefault"/><field name="isShippingDefault"/><field name="active"/></panel></form>
+  <grid name="party-tag-link-grid" title="Tags" model="com.odc.party.db.PartyTagLink"><field name="tag"/></grid>
+  <form name="party-tag-link-form" title="Tag" model="com.odc.party.db.PartyTagLink"
+    onNew="action-odc-party-tag-domain" onLoad="action-odc-party-tag-domain"><panel><field name="party" hidden="true"/><field name="tag" domain="self.archived = false AND self.active = true"/></panel></form>
+  <form name="party-form" title="Party" model="com.odc.party.db.Party"
+    onNew="action-odc-load-active-company">
+    <panel title="General information"><field name="company" readonly="true"/><field name="partyType"/><field name="displayName"/><field name="legalName"/><field name="taxIdentificationType"/><field name="taxId"/><field name="active"/></panel>
+    <panel title="Roles"><field name="roles" grid-view="party-role-grid" form-view="party-role-form"/></panel>
+    <panel title="Contacts"><field name="contactPoints" grid-view="party-contact-grid" form-view="party-contact-form"/></panel>
+    <panel title="Addresses"><field name="addresses" grid-view="party-address-grid" form-view="party-address-form"/></panel>
+    <panel title="Tags"><field name="tagLinks" grid-view="party-tag-link-grid" form-view="party-tag-link-form"/></panel>
+    <panel title="Notes"><field name="notes" colSpan="12"/></panel>
+    <panel title="Audit" collapse="true"><field name="createdBy" readonly="true"/><field name="createdOn" readonly="true"/><field name="updatedBy" readonly="true"/><field name="updatedOn" readonly="true"/></panel>
+  </form>
+  <grid name="party-tag-grid" title="Tags" model="com.odc.party.db.PartyTag"><field name="company"/><field name="name"/><field name="active"/><field name="archived"/></grid>
+  <form name="party-tag-form" title="Tag" model="com.odc.party.db.PartyTag"
+    onNew="action-odc-load-active-company"><panel><field name="company" readonly="true"/><field name="name"/><field name="description"/><field name="active"/></panel></form>
+  <action-method name="action-odc-load-active-company">
+    <call class="com.odc.organization.web.ActiveOrganizationController" method="loadCompany"/>
+  </action-method>
+  <action-method name="action-odc-party-tag-domain">
+    <call class="com.odc.party.web.PartyController" method="configureTagDomain"/>
+  </action-method>
+  <action-view name="action-party-view" title="Parties" model="com.odc.party.db.Party"><view type="grid" name="party-grid"/><view type="form" name="party-form"/><domain>self.archived = false</domain></action-view>
+  <action-view name="action-party-tag-view" title="Tags" model="com.odc.party.db.PartyTag"><view type="grid" name="party-tag-grid"/><view type="form" name="party-tag-form"/><domain>self.archived = false</domain></action-view>
+  <menuitem name="menu-odc-party-root" title="Parties" order="300"/>
+  <menuitem name="menu-odc-parties" title="Parties" parent="menu-odc-party-root" action="action-party-view" order="10"/>
+  <menuitem name="menu-odc-party-tags" title="Tags" parent="menu-odc-party-root" action="action-party-tag-view" order="20"/>
+</object-views>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<domain-models xmlns="http://axelor.com/xml/ns/domain-models"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/domain-models https://axelor.com/xml/ns/domain-models/domain-models_8.0.xsd">
+  <module name="odc-party" package="com.odc.party.db"/>
+  <entity name="Party" table="odc_party"
+    extends="com.odc.organization.db.OdcAuditableModel">
+    <many-to-one name="company" title="Company" ref="com.odc.organization.db.Company"
+      required="true"/>
+    <string name="partyType" title="Party type" required="true"
+      selection="odc.party.type"/>
+    <string name="displayName" title="Display name" required="true" namecolumn="true"/>
+    <string name="legalName" title="Legal name"/>
+    <string name="taxIdentificationType" title="Identification type"
+      selection="odc.party.identification.type"/>
+    <string name="taxId" title="Identification"/>
+    <string name="notes" title="Notes" large="true"/>
+    <boolean name="active" title="Active" default="true"/>
+    <one-to-many name="roles" title="Roles" ref="PartyRole" mappedBy="party"/>
+    <one-to-many name="contactPoints" title="Contacts" ref="PartyContactPoint" mappedBy="party"/>
+    <one-to-many name="addresses" title="Addresses" ref="PartyAddress" mappedBy="party"/>
+    <one-to-many name="tagLinks" title="Tags" ref="PartyTagLink" mappedBy="party"/>
+  </entity>
+</domain-models>

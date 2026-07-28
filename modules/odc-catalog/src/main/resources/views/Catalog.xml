@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/object-views https://axelor.com/xml/ns/object-views/object-views_8.0.xsd">
+  <selection name="odc.catalog.item.type"><option value="PRODUCT">Product</option><option value="SERVICE">Service</option></selection>
+  <grid name="uom-grid" title="Units of measure" model="com.odc.catalog.db.UnitOfMeasure"><field name="code"/><field name="name"/><field name="symbol"/><field name="decimalPrecision"/><field name="active"/><field name="archived"/></grid>
+  <form name="uom-form" title="Unit of measure" model="com.odc.catalog.db.UnitOfMeasure"><panel><field name="code"/><field name="name"/><field name="symbol"/><field name="decimalPrecision"/><field name="active"/></panel></form>
+  <grid name="item-category-grid" title="Item categories" model="com.odc.catalog.db.ItemCategory"><field name="company"/><field name="code"/><field name="name"/><field name="parent"/><field name="sequence"/><field name="active"/></grid>
+  <tree name="item-category-tree" title="Item categories">
+    <column name="name" type="string" title="Name"/>
+    <column name="code" type="string" title="Code"/>
+    <node model="com.odc.catalog.db.ItemCategory" parent="parent">
+      <field name="name" as="name"/>
+      <field name="code" as="code"/>
+    </node>
+  </tree>
+  <form name="item-category-form" title="Item category"
+    model="com.odc.catalog.db.ItemCategory"
+    onNew="action-odc-catalog-category-new"
+    onLoad="action-odc-catalog-category-load"><panel><field name="company" readonly="true"/><field name="code"/><field name="name"/><field name="parent" domain="self.archived = false AND self.active = true"/><field name="sequence"/><field name="active"/></panel></form>
+  <grid name="item-grid" title="Items" model="com.odc.catalog.db.Item"><field name="company"/><field name="itemType"/><field name="sku"/><field name="name"/><field name="barcode"/><field name="uom"/><field name="category"/><field name="taxCategory"/><field name="active"/><field name="archived"/></grid>
+  <form name="item-form" title="Item" model="com.odc.catalog.db.Item"
+    onNew="action-odc-catalog-item-new"
+    onLoad="action-odc-catalog-item-load">
+    <panel title="General information"><field name="company" readonly="true"/><field name="itemType"/><field name="sku"/><field name="name"/><field name="barcode" hideIf="itemType == 'SERVICE'"/><field name="active"/></panel>
+    <panel title="Classification"><field name="uom" requiredIf="itemType == 'PRODUCT'" domain="self.archived = false AND self.active = true"/><field name="category" domain="self.archived = false AND self.active = true"/></panel>
+    <panel title="Taxation"><field name="taxCategory" domain="self.archived = false"/></panel>
+    <panel title="Description"><field name="description" colSpan="12"/></panel>
+    <panel title="Audit" collapse="true"><field name="createdBy" readonly="true"/><field name="createdOn" readonly="true"/><field name="updatedBy" readonly="true"/><field name="updatedOn" readonly="true"/></panel>
+  </form>
+  <action-method name="action-odc-catalog-item-new">
+    <call class="com.odc.catalog.web.CatalogController" method="initializeItem"/>
+  </action-method>
+  <action-method name="action-odc-catalog-item-load">
+    <call class="com.odc.catalog.web.CatalogController" method="loadItem"/>
+  </action-method>
+  <action-method name="action-odc-catalog-category-new">
+    <call class="com.odc.catalog.web.CatalogController" method="initializeCategory"/>
+  </action-method>
+  <action-method name="action-odc-catalog-category-load">
+    <call class="com.odc.catalog.web.CatalogController" method="loadCategory"/>
+  </action-method>
+  <action-view name="action-uom-view" title="Units of measure" model="com.odc.catalog.db.UnitOfMeasure"><view type="grid" name="uom-grid"/><view type="form" name="uom-form"/><domain>self.archived = false</domain></action-view>
+  <action-view name="action-item-category-view" title="Item categories" model="com.odc.catalog.db.ItemCategory"><view type="tree" name="item-category-tree"/><view type="grid" name="item-category-grid"/><view type="form" name="item-category-form"/><domain>self.archived = false</domain></action-view>
+  <action-view name="action-item-view" title="Items" model="com.odc.catalog.db.Item"><view type="grid" name="item-grid"/><view type="form" name="item-form"/><domain>self.archived = false</domain></action-view>
+  <menuitem name="menu-odc-catalog-root" title="Catalog" order="400"/>
+  <menuitem name="menu-odc-items" title="Items" parent="menu-odc-catalog-root" action="action-item-view" order="10"/>
+  <menuitem name="menu-odc-item-categories" title="Categories" parent="menu-odc-catalog-root" action="action-item-category-view" order="20"/>
+  <menuitem name="menu-odc-uom" title="Units of measure" parent="menu-odc-catalog-root" action="action-uom-view" order="30"/>
+</object-views>
